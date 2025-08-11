@@ -25,7 +25,7 @@ jobs:
           restore-keys: mtr-deps-
       - run: ./gradlew setupLibrary --project-prop buildVersion=1.20.1 --no-daemon
       - run: ./gradlew build --project-prop buildVersion=1.20.1 --no-daemon
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: MTR-MSD-Addon-artifacts
           path: build/release/*.jar
