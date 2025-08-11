@@ -78,7 +78,7 @@ tasks.register('setupLibrary') {
 
         if (!commonJar.exists() || (now - commonJar.lastModified()) > cacheTime) {
             download.run {
-                src "${baseURL}${rootProject.mtr_version}/MTR-common-${minecraft_version}-${rootProject.mtr_version}-dev.jar"
+                src "${baseURL}latest/MTR-common-${minecraft_version}-latest-dev.jar"
                 dest "checkouts/mtr-common.jar"
                 overwrite true
             }
@@ -88,7 +88,7 @@ tasks.register('setupLibrary') {
 
         if (!fabricJar.exists() || (now - fabricJar.lastModified()) > cacheTime) {
             download.run {
-                src "${baseURL}${rootProject.mtr_version}/MTR-fabric-${minecraft_version}-${rootProject.mtr_version}-dev-shadow.jar"
+                src "${baseURL}latest/MTR-fabric-${minecraft_version}-latest-dev-shadow.jar"
                 dest "checkouts/mtr-fabric.jar"
                 overwrite true
             }
@@ -98,7 +98,7 @@ tasks.register('setupLibrary') {
 
         if (!forgeJar.exists() || (now - forgeJar.lastModified()) > cacheTime) {
             download.run {
-                src "${baseURL}${rootProject.mtr_version}/MTR-forge-${minecraft_version}-${rootProject.mtr_version}-dev-shadow.jar"
+                src "${baseURL}latest/MTR-forge-${minecraft_version}-latest-dev-shadow.jar"
                 dest "checkouts/mtr-forge.jar"
                 overwrite true
             }
