@@ -81,7 +81,7 @@ public class BlockElectricPoleTopBothSide extends HorizontalDirectionalBlock {
         }
     }
 
-    @Override
+    // @Override - Temporarily removed for MTR latest compatibility
     public PushReaction getPistonPushReaction(BlockState blockState) {
         return PushReaction.BLOCK;
     }

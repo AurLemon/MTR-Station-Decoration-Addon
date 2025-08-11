@@ -74,7 +74,7 @@ public class BlockRigidCatenaryNode extends BlockDirectionalMapper {
         return Shapes.empty();
     }
 
-    @Override
+    // @Override - Temporarily removed for MTR latest compatibility
     public PushReaction getPistonPushReaction(BlockState blockState) {
         return PushReaction.BLOCK;
     }

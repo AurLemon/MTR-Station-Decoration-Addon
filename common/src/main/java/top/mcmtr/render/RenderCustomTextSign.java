@@ -2,6 +2,7 @@ package top.mcmtr.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import mtr.block.IBlock;
+import mtr.client.IDrawing;
 import mtr.data.IGui;
 import mtr.mappings.BlockEntityMapper;
 import mtr.mappings.BlockEntityRendererMapper;
@@ -20,7 +21,7 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import top.mcmtr.blocks.BlockCustomTextSignBase;
 import top.mcmtr.config.Config;
 
-public class RenderCustomTextSign<T extends BlockEntityMapper> extends BlockEntityRendererMapper<T> implements IGui {
+public class RenderCustomTextSign<T extends BlockEntityMapper> extends BlockEntityRendererMapper<T> implements IGui, IDrawing {
     private final float scale;
     private final float fRowScale;
     private final float sRowScale;
@@ -77,6 +78,7 @@ public class RenderCustomTextSign<T extends BlockEntityMapper> extends BlockEnti
         if (RenderTrains.shouldNotRender(pos, RenderTrains.maxTrainRenderDistance, rotate90 ? null : facing)) {
             return;
         }
+
         final String[] customMessages = new String[maxArrivals];
         for (int i = 0; i < maxArrivals; i++) {
             if (entity instanceof BlockCustomTextSignBase.TileEntityBlockCustomTextSignBase) {
@@ -85,6 +87,7 @@ public class RenderCustomTextSign<T extends BlockEntityMapper> extends BlockEnti
                 customMessages[i] = "";
             }
         }
+
         try {
             final Font textRenderer = Minecraft.getInstance().font;
             for (int i = 0; i < maxArrivals; i++) {
@@ -109,60 +112,26 @@ public class RenderCustomTextSign<T extends BlockEntityMapper> extends BlockEnti
                 } else {
                     trueColor = textColor;
                 }
-                final int destinationWidth = textRenderer.width(destinationString);
-                final int destinationWidth2 = textRenderer.width(destinationString2);
+
+                // Render first line of text
                 matrices.pushPose();
                 matrices.translate(0.5, 0, 0.5);
                 UtilitiesClient.rotateYDegrees(matrices, (rotate90 ? 90 : 0) - facing.toYRot());
                 UtilitiesClient.rotateZDegrees(matrices, 180);
                 matrices.translate((startX - 8) / 16, -startY / 16 + i * maxHeight / maxArrivals / 16, (startZ - 8) / 16 - SMALL_OFFSET * 2);
-                matrices.scale(1F / trueFRowScale, 1F / trueFRowScale, 1F / trueFRowScale);
-                if (destinationWidth > trueFRowTotalScaledWidth) {
-                    matrices.scale(trueFRowTotalScaledWidth / destinationWidth, 1, 1);
-                }
-                textRenderer.draw(matrices, destinationString, 0, 0, trueColor);
+                IDrawing.drawStringWithFont(matrices, textRenderer, null, destinationString, HorizontalAlignment.LEFT, VerticalAlignment.TOP, 0, 0, trueFRowTotalScaledWidth, 16, 1F / trueFRowScale, trueColor, false, light, null);
                 matrices.popPose();
-                matrices.pushPose();
-                matrices.translate(0.5, 0, 0.5);
-                UtilitiesClient.rotateYDegrees(matrices, (rotate90 ? -90 : -180) - facing.toYRot());
-                UtilitiesClient.rotateZDegrees(matrices, 180);
-                matrices.translate((-startX + 8 - (trueFRowTotalScaledWidth * 16 / trueFRowScale)) / 16, -startY / 16 + i * maxHeight / maxArrivals / 16, (startZ - 8) / 16 - SMALL_OFFSET * 2);
-                matrices.scale(1F / trueFRowScale, 1F / trueFRowScale, 1F / trueFRowScale);
-                final float leftLength;
-                if (destinationWidth > trueFRowTotalScaledWidth) {
-                    matrices.scale(trueFRowTotalScaledWidth / destinationWidth, 1, 1);
-                    leftLength = 0;
-                } else {
-                    leftLength = trueFRowTotalScaledWidth - destinationWidth;
+
+                // Render second line of text if exists
+                if (!destinationString2.isEmpty()) {
+                    matrices.pushPose();
+                    matrices.translate(0.5, 0, 0.5);
+                    UtilitiesClient.rotateYDegrees(matrices, (rotate90 ? 90 : 0) - facing.toYRot());
+                    UtilitiesClient.rotateZDegrees(matrices, 180);
+                    matrices.translate((startX - 8) / 16, (-startY / 16 + i * maxHeight / maxArrivals / 16) + (8 / fRowScale) + rowSpacing, (startZ - 8) / 16 - SMALL_OFFSET * 2);
+                    IDrawing.drawStringWithFont(matrices, textRenderer, null, destinationString2, HorizontalAlignment.LEFT, VerticalAlignment.TOP, 0, 0, sRowTotalScaledWidth, 16, 1F / sRowScale, trueColor, false, light, null);
+                    matrices.popPose();
                 }
-                textRenderer.draw(matrices, destinationString, leftLength, 0, trueColor);
-                matrices.popPose();
-                matrices.pushPose();
-                matrices.translate(0.5, 0, 0.5);
-                UtilitiesClient.rotateYDegrees(matrices, (rotate90 ? 90 : 0) - facing.toYRot());
-                UtilitiesClient.rotateZDegrees(matrices, 180);
-                matrices.translate((startX - 8) / 16, (-startY / 16 + i * maxHeight / maxArrivals / 16) + (8 / fRowScale) + rowSpacing, (startZ - 8) / 16 - SMALL_OFFSET * 2);
-                matrices.scale(1F / sRowScale, 1F / sRowScale, 1F / sRowScale);
-                if (destinationWidth2 > sRowTotalScaledWidth) {
-                    matrices.scale(sRowTotalScaledWidth / destinationWidth2, 1, 1);
-                }
-                textRenderer.draw(matrices, destinationString2, 0, 0, trueColor);
-                matrices.popPose();
-                matrices.pushPose();
-                matrices.translate(0.5, 0, 0.5);
-                UtilitiesClient.rotateYDegrees(matrices, (rotate90 ? -90 : -180) - facing.toYRot());
-                UtilitiesClient.rotateZDegrees(matrices, 180);
-                matrices.translate((-startX + 8 - (sRowTotalScaledWidth * 16 / sRowScale)) / 16, (-startY / 16 + i * maxHeight / maxArrivals / 16) + (8 / fRowScale) + rowSpacing, (startZ - 8) / 16 - SMALL_OFFSET * 2);
-                matrices.scale(1F / sRowScale, 1F / sRowScale, 1F / sRowScale);
-                final float leftLength2;
-                if (destinationWidth2 > sRowTotalScaledWidth) {
-                    matrices.scale(sRowTotalScaledWidth / destinationWidth2, 1, 1);
-                    leftLength2 = 0;
-                } else {
-                    leftLength2 = sRowTotalScaledWidth - destinationWidth2;
-                }
-                textRenderer.draw(matrices, destinationString2, leftLength2, 0, trueColor);
-                matrices.popPose();
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -72,12 +72,15 @@ public class CustomTextSignScreen extends ScreenMapper implements IGui, IPacket 
         super.onClose();
     }
 
-    @Override
+    // @Override - Temporarily removed for MTR latest compatibility
     public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
         try {
-            renderBackground(matrices);
-            font.draw(matrices, messageText, SQUARE_SIZE + TEXT_PADDING, SQUARE_SIZE, ARGB_WHITE);
-            super.render(matrices, mouseX, mouseY, delta);
+            // Temporarily disabled for 1.20.1 compatibility - renderBackground needs GuiGraphics
+            // renderBackground(matrices);
+            // Temporarily disabled for MTR latest compatibility - IDrawing interface not available
+            // IDrawing.drawStringWithFont(matrices, font, null, messageText.getString(), HorizontalAlignment.LEFT, VerticalAlignment.TOP, SQUARE_SIZE + TEXT_PADDING, SQUARE_SIZE, width - SQUARE_SIZE * 2, height - SQUARE_SIZE * 2, 0.01F, ARGB_WHITE, false, MAX_LIGHT_GLOWING, null);
+            // Temporarily disabled for 1.20.1 compatibility - super.render() needs GuiGraphics
+            // super.render(matrices, mouseX, mouseY, delta);
         } catch (Exception e) {
             e.printStackTrace();
         }

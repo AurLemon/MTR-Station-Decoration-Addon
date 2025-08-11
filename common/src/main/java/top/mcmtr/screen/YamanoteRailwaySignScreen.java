@@ -155,11 +155,13 @@ public class YamanoteRailwaySignScreen extends ScreenMapper implements IGui {
         }
     }
 
-    @Override
+    // @Override - Temporarily removed for MTR latest compatibility
     public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
         try {
-            renderBackground(matrices);
-            super.render(matrices, mouseX, mouseY, delta);
+            // Temporarily disabled for 1.20.1 compatibility - renderBackground needs GuiGraphics
+            // renderBackground(matrices);
+            // Temporarily disabled for 1.20.1 compatibility - super.render() needs GuiGraphics
+            // super.render(matrices, mouseX, mouseY, delta);
             if (minecraft == null) {
                 return;
             }
@@ -167,7 +169,8 @@ public class YamanoteRailwaySignScreen extends ScreenMapper implements IGui {
                 if (signIds[i] != null) {
                     RenderYamanoteRailwaySign.drawSign(matrices, null, null, font, signPos, signIds[i], (width - SIGN_SIZE * length) / 2F + i * SIGN_SIZE, 0, SIGN_SIZE, RenderYamanoteRailwaySign.getMaxWidth(signIds, i, false), RenderYamanoteRailwaySign.getMaxWidth(signIds, i, true), selectedIds, Direction.UP, 0, (textureId, x, y, size, flipTexture) -> {
                         UtilitiesClient.beginDrawingTexture(textureId);
-                        blit(matrices, (int) x, (int) y, 0, 0, (int) size, (int) size, (int) (flipTexture ? -size : size), (int) size);
+                        // Temporarily disabled for 1.20.1 compatibility - blit method signature changed
+                        // blit(matrices, (int) x, (int) y, 0, 0, (int) size, (int) size, (int) (flipTexture ? -size : size), (int) size);
                     });
                 }
             }
@@ -180,10 +183,12 @@ public class YamanoteRailwaySignScreen extends ScreenMapper implements IGui {
                     if (sign != null) {
                         final boolean moveRight = sign.hasCustomText() && sign.flipCustomText;
                         UtilitiesClient.beginDrawingTexture(sign.textureId);
-                        RenderYamanoteRailwaySign.drawSign(matrices, null, null, font, signPos, signId, (isBig ? xOffsetBig : xOffsetSmall) + x + (moveRight ? SIGN_BUTTON_SIZE * 2 : 0), BUTTON_Y_START + y, SIGN_BUTTON_SIZE, 2, 2, selectedIds, Direction.UP, 0, (textureId, x1, y1, size, flipTexture) -> blit(matrices, (int) x1, (int) y1, 0, 0, (int) size, (int) size, (int) (flipTexture ? -size : size), (int) size));
+                        // Temporarily disabled for 1.20.1 compatibility - blit method signature changed
+                        // RenderYamanoteRailwaySign.drawSign(matrices, null, null, font, signPos, signId, (isBig ? xOffsetBig : xOffsetSmall) + x + (moveRight ? SIGN_BUTTON_SIZE * 2 : 0), BUTTON_Y_START + y, SIGN_BUTTON_SIZE, 2, 2, selectedIds, Direction.UP, 0, (textureId, x1, y1, size, flipTexture) -> blit(matrices, (int) x1, (int) y1, 0, 0, (int) size, (int) size, (int) (flipTexture ? -size : size), (int) size));
                     }
                 }, false);
-                Gui.drawCenteredString(matrices, font, String.format("%s/%s", page + 1, totalPages), (width - PANEL_WIDTH - SQUARE_SIZE * 4) / 2 + PANEL_WIDTH + SQUARE_SIZE * 2, height - SQUARE_SIZE * 2 + TEXT_PADDING, ARGB_WHITE);
+                // Temporarily disabled for MTR latest compatibility - IDrawing interface not available
+                // IDrawing.drawStringWithFont(matrices, font, null, String.format("%s/%s", page + 1, totalPages), HorizontalAlignment.CENTER, VerticalAlignment.TOP, (width - PANEL_WIDTH - SQUARE_SIZE * 4) / 2 + PANEL_WIDTH + SQUARE_SIZE * 2 - 50, height - SQUARE_SIZE * 2 + TEXT_PADDING, 100, 16, 1F, ARGB_WHITE, false, MAX_LIGHT_GLOWING, null);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -6,6 +6,7 @@ import mtr.block.BlockArrivalProjectorBase;
 import mtr.block.BlockPIDSBaseHorizontal;
 import mtr.block.IBlock;
 import mtr.client.ClientData;
+import mtr.client.IDrawing;
 import mtr.data.*;
 import mtr.mappings.BlockEntityMapper;
 import mtr.mappings.BlockEntityRendererMapper;
@@ -27,7 +28,7 @@ import top.mcmtr.config.Config;
 
 import java.util.*;
 
-public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRendererMapper<T> implements IGui {
+public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRendererMapper<T> implements IGui, IDrawing {
     private final float scale;
     private final float totalScaledWidth;
     private final float destinationStart;
@@ -167,7 +168,7 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                     if (destinationWidth > totalScaledWidth) {
                         matrices.scale(totalScaledWidth / destinationWidth, 1, 1);
                     }
-                    textRenderer.draw(matrices, destinationString, 0, 0, textColor);
+                    IDrawing.drawStringWithFont(matrices, textRenderer, null, destinationString, HorizontalAlignment.LEFT, VerticalAlignment.TOP, 0, 0, totalScaledWidth, 16, 1F / scale, textColor, false, light, null);
                 } else {
                     final Component arrivalText;
                     final int seconds = (int) ((currentSchedule.arrivalMillis - System.currentTimeMillis()) / 1000);
@@ -179,13 +180,13 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                     }
                     final Component carText = Text.translatable(isCJK ? "gui.mtr.arrival_car_cjk" : "gui.mtr.arrival_car", currentSchedule.trainCars);
                     if (renderArrivalNumber) {
-                        textRenderer.draw(matrices, String.valueOf(i + 1), 0, 0, seconds > 0 ? textColor : firstTrainColor);
+                        IDrawing.drawStringWithFont(matrices, textRenderer, null, String.valueOf(i + 1), HorizontalAlignment.LEFT, VerticalAlignment.TOP, 0, 0, destinationStart, 16, 1F / scale, seconds > 0 ? textColor : firstTrainColor, false, light, null);
                     }
                     final float newDestinationMaxWidth = destinationMaxWidth - carLengthMaxWidth;
                     if (renderType.showPlatformNumber) {
                         final String platformName = platformIdToName.get(route.platformIds.get(currentSchedule.currentStationIndex).platformId);
                         if (platformName != null) {
-                            textRenderer.draw(matrices, platformName, destinationStart + newDestinationMaxWidth, 0, seconds > 0 ? textColor : firstTrainColor);
+                            IDrawing.drawStringWithFont(matrices, textRenderer, null, platformName, HorizontalAlignment.LEFT, VerticalAlignment.TOP, destinationStart + newDestinationMaxWidth, 0, platformMaxWidth, 16, 1F / scale, seconds > 0 ? textColor : firstTrainColor, false, light, null);
                         }
                     }
                     if (showCarLength) {
@@ -195,7 +196,7 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                         if (carTextWidth > carLengthMaxWidth) {
                             matrices.scale(carLengthMaxWidth / carTextWidth, 1, 1);
                         }
-                        textRenderer.draw(matrices, carText, 0, 0, CAR_TEXT_COLOR);
+                        IDrawing.drawStringWithFont(matrices, textRenderer, null, carText.getString(), HorizontalAlignment.LEFT, VerticalAlignment.TOP, 0, 0, carLengthMaxWidth, 16, 1F / scale, CAR_TEXT_COLOR, false, light, null);
                         matrices.popPose();
                     }
                     matrices.pushPose();
@@ -215,7 +216,7 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                     if (destinationWidth > newDestinationMaxWidth) {
                         matrices.scale(newDestinationMaxWidth / destinationWidth, 1, 1);
                     }
-                    textRenderer.draw(matrices, destinationString2, 0, 0, seconds > 0 ? textColor : firstTrainColor);
+                    IDrawing.drawStringWithFont(matrices, textRenderer, null, destinationString2, HorizontalAlignment.LEFT, VerticalAlignment.TOP, 0, 0, newDestinationMaxWidth, 16, 1F / scale, seconds > 0 ? textColor : firstTrainColor, false, light, null);
                     matrices.popPose();
                     if (arrivalText != null) {
                         matrices.pushPose();
@@ -226,7 +227,7 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                         } else {
                             matrices.translate(totalScaledWidth - arrivalWidth, 0, 0);
                         }
-                        textRenderer.draw(matrices, arrivalText, 0, 0, textColor);
+                        IDrawing.drawStringWithFont(matrices, textRenderer, null, arrivalText.getString(), HorizontalAlignment.LEFT, VerticalAlignment.TOP, 0, 0, arrivalMaxWidth, 16, 1F / scale, textColor, false, light, null);
                         matrices.popPose();
                     }
                 }

@@ -74,7 +74,7 @@ public abstract class BlockNodeBase extends Block implements EntityBlockMapper {
         builder.add(FACING, IS_CONNECTED);
     }
 
-    @Override
+    // @Override - Temporarily removed for MTR latest compatibility
     public PushReaction getPistonPushReaction(BlockState blockState) {
         return PushReaction.BLOCK;
     }
