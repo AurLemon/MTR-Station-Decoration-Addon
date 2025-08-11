@@ -1,14 +1,12 @@
-
-name: Build
+name: Release
 
 on:
   push:
-  pull_request:
+    tags: ['v*']
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
       - uses: gradle/wrapper-validation-action@v1
@@ -25,3 +23,8 @@ jobs:
           restore-keys: mtr-deps-
       - run: ./gradlew setupLibrary --project-prop buildVersion=1.20.1 --no-daemon
       - run: ./gradlew build --project-prop buildVersion=1.20.1 --no-daemon
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: build/release/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
