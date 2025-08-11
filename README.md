@@ -3,7 +3,7 @@ A Station Decoration Addon for the Minecraft Transit Railway Mod
 
 This is a fork from [AIDA64S/MTR-Station-Decoration-Addon](https://github.com/AIDA64S/MTR-Station-Decoration-Addon)
 
-We (or more accurately is Claude & Augment Agent, thanks to AI) try our best to made it compatible with MTR 3.2.2 and Minecraft 1.20.1 version in Mod v1.3.4.
+We (or more accurately, Claude & Augment Agent, thanks to AI) tried our best to make it compatible with MTR 3.2.2 and Minecraft 1.20.1 version in Mod v1.3.4.
 
 ## Setup
 
