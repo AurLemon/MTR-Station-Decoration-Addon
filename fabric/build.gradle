@@ -64,7 +64,7 @@ task moveFabricBuilds() {
             from "build/libs"
             into "../build/release"
             exclude "*dev-shadow.jar"
-            rename "(.+)", "MTR-MSD-Addon-\$1"
+            rename "(.+)", "MTR-MSD-Addon-fabric-${minecraft_version}-${rootProject.mtr_version}-${rootProject.mod_version}.jar"
         }
         copy {
             from "../build/release"

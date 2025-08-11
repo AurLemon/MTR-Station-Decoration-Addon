@@ -59,10 +59,9 @@ subprojects {
     dependencies {
         minecraft "com.mojang:minecraft:${minecraft_version}"
         mappings loom.officialMojangMappings()
-        implementation "org.msgpack:msgpack-core:+"
         implementation "org.codehaus.groovy:groovy-json:3.0.9"
         implementation files("../checkouts/mtr-common.jar")
-        shadowCommon "org.msgpack:msgpack-core:+"
+        compileOnly "org.msgpack:msgpack-core:${rootProject.messagepack_version}"
     }
 }
 
