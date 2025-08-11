@@ -70,7 +70,7 @@ task moveForgeBuilds() {
             from "build/libs"
             into "../build/release"
             exclude "*dev-shadow.jar"
-            rename "(.+)", "MTR-MSD-Addon-forge-${minecraft_version}-${rootProject.mtr_version}-${rootProject.mod_version}.jar"
+            rename "(.+)", "MTR-MSD-Addon-forge-${rootProject.version.split("-")[0]}-${rootProject.mtr_version}-${rootProject.mod_version}.jar"
         }
         copy {
             from "../build/release"
