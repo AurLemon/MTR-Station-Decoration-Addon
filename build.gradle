@@ -60,7 +60,6 @@ subprojects {
         minecraft "com.mojang:minecraft:${minecraft_version}"
         mappings loom.officialMojangMappings()
         implementation "org.msgpack:msgpack-core:+"
-        implementation "com.github.jonafanho:Minecraft-Mod-API-Tools:${rootProject.minecraft_mod_api_tools_version}"
         implementation "org.codehaus.groovy:groovy-json:3.0.9"
         implementation files("../checkouts/mtr-common.jar")
         shadowCommon "org.msgpack:msgpack-core:+"
