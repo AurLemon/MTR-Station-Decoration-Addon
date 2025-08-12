@@ -1,6 +1,6 @@
 {
-  "itemGroup.msd.msd_blocks": "站外装饰",
-  "itemGroup.msd.msd_station_blocks": "站内装饰",
+  "itemGroup.msd.blocks": "站外装饰",
+  "itemGroup.msd.station_blocks": "站内装饰",
   "item.msd.catenary_connector": "接触网连接器",
   "item.msd.electric_connector": "电线连接器",
   "item.msd.catenary_remover": "连接移除器",

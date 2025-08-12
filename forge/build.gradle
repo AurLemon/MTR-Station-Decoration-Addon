@@ -71,11 +71,13 @@ task moveForgeBuilds() {
             into "../build/release"
             exclude "*dev-shadow.jar"
             rename "(.+)", "MTR-MSD-Addon-forge-${rootProject.version.split("-")[0]}-${rootProject.mtr_version}-${rootProject.mod_version}.jar"
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         }
         copy {
             from "../build/release"
             into "../build/latest"
             rename { fileName -> fileName.replace(rootProject.mod_version, "latest") }
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         }
     }
 }

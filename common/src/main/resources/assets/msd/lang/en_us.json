@@ -1,6 +1,6 @@
 {
-  "itemGroup.msd.msd_blocks": "Railway Line Decoration",
-  "itemGroup.msd.msd_station_blocks": "Station Decoration",
+  "itemGroup.msd.blocks": "Railway Line Decoration",
+  "itemGroup.msd.station_blocks": "Station Decoration",
   "item.msd.catenary_connector": "Catenary Connector",
   "item.msd.electric_connector": "Electric Connector",
   "item.msd.catenary_remover": "Connection Remover",
