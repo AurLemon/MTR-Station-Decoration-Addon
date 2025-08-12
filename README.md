@@ -24,7 +24,7 @@ We also active GitHub Actions, if you want to build this mod, just push a tag to
 
 1. Clone this repository
 2. Execute `./gradlew build`
-3. The mod jar file will be in `build/libs` directory
+3. The mod jar file will be in `build/release` directory
 
 If you meet network problem, try configure proxy in `gradle.properties` file.
 
