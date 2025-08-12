@@ -1,6 +1,7 @@
 package top.mcmtr.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import mtr.block.IBlock;
 import mtr.client.IDrawing;
 import mtr.data.IGui;
@@ -119,7 +120,10 @@ public class RenderCustomTextSign<T extends BlockEntityMapper> extends BlockEnti
                 UtilitiesClient.rotateYDegrees(matrices, (rotate90 ? 90 : 0) - facing.toYRot());
                 UtilitiesClient.rotateZDegrees(matrices, 180);
                 matrices.translate((startX - 8) / 16, -startY / 16 + i * maxHeight / maxArrivals / 16, (startZ - 8) / 16 - SMALL_OFFSET * 2);
-                IDrawing.drawStringWithFont(matrices, textRenderer, null, destinationString, HorizontalAlignment.LEFT, VerticalAlignment.TOP, 0, 0, trueFRowTotalScaledWidth, 16, 1F / trueFRowScale, trueColor, false, light, null);
+                matrices.scale(1F / trueFRowScale, 1F / trueFRowScale, 1F / trueFRowScale);
+                final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(com.mojang.blaze3d.vertex.Tesselator.getInstance().getBuilder());
+                IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, destinationString, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 6, trueFRowTotalScaledWidth, 16, 1F / trueFRowScale, trueColor, false, light, null);
+                bufferSource.endBatch();
                 matrices.popPose();
 
                 // Render second line of text if exists
@@ -129,7 +133,10 @@ public class RenderCustomTextSign<T extends BlockEntityMapper> extends BlockEnti
                     UtilitiesClient.rotateYDegrees(matrices, (rotate90 ? 90 : 0) - facing.toYRot());
                     UtilitiesClient.rotateZDegrees(matrices, 180);
                     matrices.translate((startX - 8) / 16, (-startY / 16 + i * maxHeight / maxArrivals / 16) + (8 / fRowScale) + rowSpacing, (startZ - 8) / 16 - SMALL_OFFSET * 2);
-                    IDrawing.drawStringWithFont(matrices, textRenderer, null, destinationString2, HorizontalAlignment.LEFT, VerticalAlignment.TOP, 0, 0, sRowTotalScaledWidth, 16, 1F / sRowScale, trueColor, false, light, null);
+                    matrices.scale(1F / sRowScale, 1F / sRowScale, 1F / sRowScale);
+                    final MultiBufferSource.BufferSource bufferSource2 = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+                    IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource2, destinationString2, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 6, sRowTotalScaledWidth, 16, 1F / sRowScale, trueColor, false, light, null);
+                    bufferSource2.endBatch();
                     matrices.popPose();
                 }
             }

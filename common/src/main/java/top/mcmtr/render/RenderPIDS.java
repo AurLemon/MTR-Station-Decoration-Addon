@@ -1,6 +1,7 @@
 package top.mcmtr.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import mtr.MTRClient;
 import mtr.block.BlockArrivalProjectorBase;
 import mtr.block.BlockPIDSBaseHorizontal;
@@ -168,7 +169,9 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                     if (destinationWidth > totalScaledWidth) {
                         matrices.scale(totalScaledWidth / destinationWidth, 1, 1);
                     }
-                    IDrawing.drawStringWithFont(matrices, textRenderer, null, destinationString, HorizontalAlignment.LEFT, VerticalAlignment.TOP, 0, 0, totalScaledWidth, 16, 1F / scale, textColor, false, light, null);
+                    final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+                    IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, destinationString, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 6, totalScaledWidth, 16, 1F / scale, textColor, false, light, null);
+                    bufferSource.endBatch();
                 } else {
                     final Component arrivalText;
                     final int seconds = (int) ((currentSchedule.arrivalMillis - System.currentTimeMillis()) / 1000);
@@ -180,13 +183,17 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                     }
                     final Component carText = Text.translatable(isCJK ? "gui.mtr.arrival_car_cjk" : "gui.mtr.arrival_car", currentSchedule.trainCars);
                     if (renderArrivalNumber) {
-                        IDrawing.drawStringWithFont(matrices, textRenderer, null, String.valueOf(i + 1), HorizontalAlignment.LEFT, VerticalAlignment.TOP, 0, 0, destinationStart, 16, 1F / scale, seconds > 0 ? textColor : firstTrainColor, false, light, null);
+                        final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+                    IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, String.valueOf(i + 1), HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 6, destinationStart, 16, 1F / scale, seconds > 0 ? textColor : firstTrainColor, false, light, null);
+                    bufferSource.endBatch();
                     }
                     final float newDestinationMaxWidth = destinationMaxWidth - carLengthMaxWidth;
                     if (renderType.showPlatformNumber) {
                         final String platformName = platformIdToName.get(route.platformIds.get(currentSchedule.currentStationIndex).platformId);
                         if (platformName != null) {
-                            IDrawing.drawStringWithFont(matrices, textRenderer, null, platformName, HorizontalAlignment.LEFT, VerticalAlignment.TOP, destinationStart + newDestinationMaxWidth, 0, platformMaxWidth, 16, 1F / scale, seconds > 0 ? textColor : firstTrainColor, false, light, null);
+                            final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+                            IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, platformName, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, destinationStart + newDestinationMaxWidth, 6, platformMaxWidth, 16, 1F / scale, seconds > 0 ? textColor : firstTrainColor, false, light, null);
+                            bufferSource.endBatch();
                         }
                     }
                     if (showCarLength) {
@@ -196,7 +203,9 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                         if (carTextWidth > carLengthMaxWidth) {
                             matrices.scale(carLengthMaxWidth / carTextWidth, 1, 1);
                         }
-                        IDrawing.drawStringWithFont(matrices, textRenderer, null, carText.getString(), HorizontalAlignment.LEFT, VerticalAlignment.TOP, 0, 0, carLengthMaxWidth, 16, 1F / scale, CAR_TEXT_COLOR, false, light, null);
+                        final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+                        IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, carText.getString(), HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 6, carLengthMaxWidth, 16, 1F / scale, CAR_TEXT_COLOR, false, light, null);
+                        bufferSource.endBatch();
                         matrices.popPose();
                     }
                     matrices.pushPose();
@@ -216,7 +225,7 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                     if (destinationWidth > newDestinationMaxWidth) {
                         matrices.scale(newDestinationMaxWidth / destinationWidth, 1, 1);
                     }
-                    IDrawing.drawStringWithFont(matrices, textRenderer, null, destinationString2, HorizontalAlignment.LEFT, VerticalAlignment.TOP, 0, 0, newDestinationMaxWidth, 16, 1F / scale, seconds > 0 ? textColor : firstTrainColor, false, light, null);
+                    IDrawing.drawStringWithFont(matrices, textRenderer, null, destinationString2, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 6, newDestinationMaxWidth, 16, 1F / scale, seconds > 0 ? textColor : firstTrainColor, false, light, null);
                     matrices.popPose();
                     if (arrivalText != null) {
                         matrices.pushPose();
@@ -227,7 +236,7 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                         } else {
                             matrices.translate(totalScaledWidth - arrivalWidth, 0, 0);
                         }
-                        IDrawing.drawStringWithFont(matrices, textRenderer, null, arrivalText.getString(), HorizontalAlignment.LEFT, VerticalAlignment.TOP, 0, 0, arrivalMaxWidth, 16, 1F / scale, textColor, false, light, null);
+                        IDrawing.drawStringWithFont(matrices, textRenderer, null, arrivalText.getString(), HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 6, arrivalMaxWidth, 16, 1F / scale, textColor, false, light, null);
                         matrices.popPose();
                     }
                 }
