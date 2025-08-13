@@ -1,4 +1,5 @@
 # MTR-Station-Decoration-Addon
+> 目前依然在解决问题，修复后会在 Release 处发布版本。
 
 [English](README.md)
 

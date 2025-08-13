@@ -1,4 +1,5 @@
 # MTR-Station-Decoration-Addon
+> Now we still working on it, when we finished, we will release it.
 
 [中文](README_zh.md)
 
