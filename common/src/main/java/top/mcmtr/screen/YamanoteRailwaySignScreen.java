@@ -13,6 +13,7 @@ import mtr.mappings.UtilitiesClient;
 import mtr.screen.DashboardListSelectorScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -155,22 +156,24 @@ public class YamanoteRailwaySignScreen extends ScreenMapper implements IGui {
         }
     }
 
-    // @Override - Temporarily removed for MTR latest compatibility
-    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
+    @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         try {
-            // Temporarily disabled for 1.20.1 compatibility - renderBackground needs GuiGraphics
-            // renderBackground(matrices);
-            // Temporarily disabled for 1.20.1 compatibility - super.render() needs GuiGraphics
-            // super.render(matrices, mouseX, mouseY, delta);
+            renderBackground(graphics);
+            super.render(graphics, mouseX, mouseY, delta);
             if (minecraft == null) {
                 return;
             }
+
+            // 获取 PoseStack 用于兼容现有的渲染代码
+            PoseStack matrices = graphics.pose();
+
             for (int i = 0; i < signIds.length; i++) {
                 if (signIds[i] != null) {
                     RenderYamanoteRailwaySign.drawSign(matrices, null, null, font, signPos, signIds[i], (width - SIGN_SIZE * length) / 2F + i * SIGN_SIZE, 0, SIGN_SIZE, RenderYamanoteRailwaySign.getMaxWidth(signIds, i, false), RenderYamanoteRailwaySign.getMaxWidth(signIds, i, true), selectedIds, Direction.UP, 0, (textureId, x, y, size, flipTexture) -> {
                         UtilitiesClient.beginDrawingTexture(textureId);
-                        // Temporarily disabled for 1.20.1 compatibility - blit method signature changed
-                        // blit(matrices, (int) x, (int) y, 0, 0, (int) size, (int) size, (int) (flipTexture ? -size : size), (int) size);
+                        // 使用 GuiGraphics 的 blit 方法，需要提供纹理的宽度和高度
+                        graphics.blit(textureId, (int) x, (int) y, 0, 0, (int) size, (int) size, (int) size, (int) size);
                     });
                 }
             }
@@ -183,12 +186,11 @@ public class YamanoteRailwaySignScreen extends ScreenMapper implements IGui {
                     if (sign != null) {
                         final boolean moveRight = sign.hasCustomText() && sign.flipCustomText;
                         UtilitiesClient.beginDrawingTexture(sign.textureId);
-                        // Temporarily disabled for 1.20.1 compatibility - blit method signature changed
-                        // RenderYamanoteRailwaySign.drawSign(matrices, null, null, font, signPos, signId, (isBig ? xOffsetBig : xOffsetSmall) + x + (moveRight ? SIGN_BUTTON_SIZE * 2 : 0), BUTTON_Y_START + y, SIGN_BUTTON_SIZE, 2, 2, selectedIds, Direction.UP, 0, (textureId, x1, y1, size, flipTexture) -> blit(matrices, (int) x1, (int) y1, 0, 0, (int) size, (int) size, (int) (flipTexture ? -size : size), (int) size));
+                        RenderYamanoteRailwaySign.drawSign(matrices, null, null, font, signPos, signId, (isBig ? xOffsetBig : xOffsetSmall) + x + (moveRight ? SIGN_BUTTON_SIZE * 2 : 0), BUTTON_Y_START + y, SIGN_BUTTON_SIZE, 2, 2, selectedIds, Direction.UP, 0, (textureId, x1, y1, size, flipTexture) -> graphics.blit(textureId, (int) x1, (int) y1, 0, 0, (int) size, (int) size, (int) size, (int) size));
                     }
                 }, false);
-                // Temporarily disabled for MTR latest compatibility - IDrawing interface not available
-                // IDrawing.drawStringWithFont(matrices, font, null, String.format("%s/%s", page + 1, totalPages), HorizontalAlignment.CENTER, VerticalAlignment.TOP, (width - PANEL_WIDTH - SQUARE_SIZE * 4) / 2 + PANEL_WIDTH + SQUARE_SIZE * 2 - 50, height - SQUARE_SIZE * 2 + TEXT_PADDING, 100, 16, 1F, ARGB_WHITE, false, MAX_LIGHT_GLOWING, null);
+                // 使用 GuiGraphics 绘制页面信息
+                graphics.drawCenteredString(font, String.format("%s/%s", page + 1, totalPages), (width - PANEL_WIDTH - SQUARE_SIZE * 4) / 2 + PANEL_WIDTH + SQUARE_SIZE * 2, height - SQUARE_SIZE * 2 + TEXT_PADDING, ARGB_WHITE);
             }
         } catch (Exception e) {
             e.printStackTrace();

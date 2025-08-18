@@ -8,6 +8,7 @@ import mtr.mappings.Text;
 import mtr.packet.IPacket;
 import mtr.screen.WidgetBetterTextField;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
@@ -72,15 +73,13 @@ public class CustomTextSignScreen extends ScreenMapper implements IGui, IPacket 
         super.onClose();
     }
 
-    // @Override - Temporarily removed for MTR latest compatibility
-    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
+    @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         try {
-            // Temporarily disabled for 1.20.1 compatibility - renderBackground needs GuiGraphics
-            // renderBackground(matrices);
-            // Temporarily disabled for MTR latest compatibility - IDrawing interface not available
-            // IDrawing.drawStringWithFont(matrices, font, null, messageText.getString(), HorizontalAlignment.LEFT, VerticalAlignment.TOP, SQUARE_SIZE + TEXT_PADDING, SQUARE_SIZE, width - SQUARE_SIZE * 2, height - SQUARE_SIZE * 2, 0.01F, ARGB_WHITE, false, MAX_LIGHT_GLOWING, null);
-            // Temporarily disabled for 1.20.1 compatibility - super.render() needs GuiGraphics
-            // super.render(matrices, mouseX, mouseY, delta);
+            renderBackground(graphics);
+            // 使用 GuiGraphics 绘制文本
+            graphics.drawString(font, messageText, SQUARE_SIZE + TEXT_PADDING, SQUARE_SIZE, ARGB_WHITE);
+            super.render(graphics, mouseX, mouseY, delta);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -8,6 +8,7 @@ import mtr.mappings.UtilitiesClient;
 import mtr.packet.IPacket;
 import mtr.screen.WidgetBetterTextField;
 import mtr.screen.WidgetShorterSlider;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -50,19 +51,21 @@ public class BlockNodeScreen extends ScreenMapper implements IGui, IPacket {
         addDrawableChild(sliderPositionZ);
     }
 
-    // @Override - Temporarily removed for MTR latest compatibility
-    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
+    @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         try {
-            // Temporarily disabled for 1.20.1 compatibility - renderBackground needs GuiGraphics
-            // renderBackground(matrices);
-            // Temporarily disabled for MTR latest compatibility - IDrawing interface not available
-            // IDrawing.drawStringWithFont(matrices, font, null, Text.translatable("gui.msd.point_position_options").getString(), HorizontalAlignment.CENTER, VerticalAlignment.TOP, 0, TEXT_PADDING, width, 16, 1F, ARGB_WHITE, false, MAX_LIGHT_GLOWING, null);
+            renderBackground(graphics);
+
+            // 绘制标题
+            graphics.drawCenteredString(font, Text.translatable("gui.msd.point_position_options"), width / 2, TEXT_PADDING, ARGB_WHITE);
+
             int i = 1;
-            // IDrawing.drawStringWithFont(matrices, font, null, Text.translatable("options.msd.point_position_x").getString(), HorizontalAlignment.LEFT, VerticalAlignment.TOP, SQUARE_SIZE, (SQUARE_SIZE + TEXT_FIELD_PADDING) * (i++) + SQUARE_SIZE + TEXT_PADDING, width - SQUARE_SIZE * 2, 16, 1F, ARGB_WHITE, false, MAX_LIGHT_GLOWING, null);
-            // IDrawing.drawStringWithFont(matrices, font, null, Text.translatable("options.msd.point_position_y").getString(), HorizontalAlignment.LEFT, VerticalAlignment.TOP, SQUARE_SIZE, (SQUARE_SIZE + TEXT_FIELD_PADDING) * (i++) + SQUARE_SIZE + TEXT_PADDING, width - SQUARE_SIZE * 2, 16, 1F, ARGB_WHITE, false, MAX_LIGHT_GLOWING, null);
-            // IDrawing.drawStringWithFont(matrices, font, null, Text.translatable("options.msd.point_position_z").getString(), HorizontalAlignment.LEFT, VerticalAlignment.TOP, SQUARE_SIZE, (SQUARE_SIZE + TEXT_FIELD_PADDING) * (i++) + SQUARE_SIZE + TEXT_PADDING, width - SQUARE_SIZE * 2, 16, 1F, ARGB_WHITE, false, MAX_LIGHT_GLOWING, null);
-            // Temporarily disabled for 1.20.1 compatibility - super.render() needs GuiGraphics
-            // super.render(matrices, mouseX, mouseY, delta);
+            // 绘制各个坐标标签
+            graphics.drawString(font, Text.translatable("options.msd.point_position_x"), SQUARE_SIZE, (SQUARE_SIZE + TEXT_FIELD_PADDING) * (i++) + SQUARE_SIZE + TEXT_PADDING, ARGB_WHITE);
+            graphics.drawString(font, Text.translatable("options.msd.point_position_y"), SQUARE_SIZE, (SQUARE_SIZE + TEXT_FIELD_PADDING) * (i++) + SQUARE_SIZE + TEXT_PADDING, ARGB_WHITE);
+            graphics.drawString(font, Text.translatable("options.msd.point_position_z"), SQUARE_SIZE, (SQUARE_SIZE + TEXT_FIELD_PADDING) * i + SQUARE_SIZE + TEXT_PADDING, ARGB_WHITE);
+
+            super.render(graphics, mouseX, mouseY, delta);
         } catch (Exception e) {
             e.printStackTrace();
         }
