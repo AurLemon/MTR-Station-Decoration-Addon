@@ -2,7 +2,8 @@
 	"credit": "Designed By Santorsia, Made with Blockbench ",
 	"texture_size": [64, 64],
 	"textures": {
-		"4": "msd:block/yuuni_pids"
+		"4": "msd:block/yuuni_pids",
+		"particle": "msd:block/yuuni_pids"
 	},
 	"elements": [
 		{
