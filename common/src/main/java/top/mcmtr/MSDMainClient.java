@@ -54,12 +54,12 @@ public class MSDMainClient {
         RegistryClient.registerBlockRenderType(RenderType.cutout(), MSDBlocks.STANDING_SIGN_1.get());
         RegistryClient.registerBlockRenderType(RenderType.cutout(), MSDBlocks.TRANS_CATENARY_NODE.get());
 
-        RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YUUNI_PIDS_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, 2, 2.5F, 7.5F, 6F, 6.5F, 27, true, false, PIDSType.PIDS, 0xFF9900, 0x33CC00, 1.25F, true));
-        RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YUUNI_PIDS_2_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, 1, 4F, 7.5F, 5.9F, 2.5F, 24, true, false, PIDSType.PIDS, 0xFF9900, 0xFFC0CB));
-        RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YAMANOTE_4_PIDS_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, 3, 0F, 15F, 7F, 6F, 32, true, true, PIDSType.PIDS, 0x00FF00, 0xFF0000));
-        RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YAMANOTE_5_PIDS_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, 3, -4F, 15F, 7F, 6F, 40, true, true, PIDSType.PIDS, 0x00FF00, 0xFF0000));
-        RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YAMANOTE_6_PIDS_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, 3, -8F, 15F, 7F, 6F, 48, true, true, PIDSType.PIDS, 0x00FF00, 0xFF0000));
-        RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YAMANOTE_7_PIDS_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, 3, -12F, 15F, 7F, 6F, 56, true, true, PIDSType.PIDS, 0x00FF00, 0xFF0000));
+        RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YUUNI_PIDS_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, 2, 2.5F, 7.5F, 6F, 6.5F, 27, true, false, PIDSType.PIDS, 0xFF9900, 0x33CC00, 1.8F, true));
+        RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YUUNI_PIDS_2_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, 1, 4F, 7.5F, 5.9F, 2.5F, 24, true, false, PIDSType.PIDS, 0xFF9900, 0xFFC0CB, 2.2F, false));
+        RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YAMANOTE_4_PIDS_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, 3, 0F, 15F, 7F, 6F, 32, true, true, PIDSType.PIDS, 0x00FF00, 0xFF0000, 1.5F, false));
+        RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YAMANOTE_5_PIDS_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, 3, -4F, 15F, 7F, 6F, 40, true, true, PIDSType.PIDS, 0x00FF00, 0xFF0000, 1.5F, false));
+        RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YAMANOTE_6_PIDS_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, 3, -8F, 15F, 7F, 6F, 48, true, true, PIDSType.PIDS, 0x00FF00, 0xFF0000, 1.5F, false));
+        RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YAMANOTE_7_PIDS_TILE_ENTITY.get(), dispatcher -> new RenderPIDS<>(dispatcher, 3, -12F, 15F, 7F, 6F, 56, true, true, PIDSType.PIDS, 0x00FF00, 0xFF0000, 1.5F, false));
         RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YAMANOTE_RAILWAY_SIGN_2_EVEN_TILE_ENTITY.get(), RenderYamanoteRailwaySign::new);
         RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YAMANOTE_RAILWAY_SIGN_2_ODD_TILE_ENTITY.get(), RenderYamanoteRailwaySign::new);
         RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YAMANOTE_RAILWAY_SIGN_3_EVEN_TILE_ENTITY.get(), RenderYamanoteRailwaySign::new);
@@ -72,8 +72,8 @@ public class MSDMainClient {
         RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YAMANOTE_RAILWAY_SIGN_6_ODD_TILE_ENTITY.get(), RenderYamanoteRailwaySign::new);
         RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YAMANOTE_RAILWAY_SIGN_7_EVEN_TILE_ENTITY.get(), RenderYamanoteRailwaySign::new);
         RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.YAMANOTE_RAILWAY_SIGN_7_ODD_TILE_ENTITY.get(), RenderYamanoteRailwaySign::new);
-        RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.STANDING_SIGN_TILE_ENTITY.get(), dispatcher -> new RenderCustomTextSign<>(dispatcher, 3, 8F, 14.5F, 7.01F, 15F, 11, true, 0x000000, true, 0xFFFFFF, 2F, 3.1F, 6.2F, 0.0625F));
-        RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.STANDING_SIGN_1_TILE_ENTITY.get(), dispatcher -> new RenderCustomTextSign<>(dispatcher, 1, 2.5F, 9.25F, 7.65F, 4F, 11, true, 0xFFFFFF, false, 0xFFFFFF, 1.6F, 1.6F, 3.2F, 0.0625F));
+        RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.STANDING_SIGN_TILE_ENTITY.get(), dispatcher -> new RenderCustomTextSign<>(dispatcher, 3, 8F, 14.5F, 7.01F, 15F, 11, true, 0x000000, true, 0xFFFFFF, 2.0F, 3.0F, 6.0F, 0.0625F));
+        RegistryClient.registerTileEntityRenderer(MSDBlockEntityTypes.STANDING_SIGN_1_TILE_ENTITY.get(), dispatcher -> new RenderCustomTextSign<>(dispatcher, 1, 2.5F, 9.25F, 7.65F, 4F, 11, true, 0xFFFFFF, false, 0xFFFFFF, 1.8F, 1.8F, 3.6F, 0.0625F));
 
         RegistryClient.registerNetworkReceiver(MSDPacket.PACKET_OPEN_YAMANOTE_RAILWAY_SIGN_SCREEN, packet -> MSDPacketTrainDataGuiClient.openYamanoteRailwaySignScreenS2C(Minecraft.getInstance(), packet));
         RegistryClient.registerNetworkReceiver(MSDPacket.PACKET_WRITE_CATENARY, packet -> MSDClientData.writeCatenaries(Minecraft.getInstance(), packet));

@@ -170,7 +170,7 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                         matrices.scale(totalScaledWidth / destinationWidth, 1, 1);
                     }
                     final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-                    IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, destinationString, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 6, totalScaledWidth, 16, 1F / scale, textColor, false, light, null);
+                    IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, destinationString, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 8, totalScaledWidth, 16, 1F / scale, textColor, false, light, null);
                     bufferSource.endBatch();
                 } else {
                     final Component arrivalText;
@@ -184,7 +184,7 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                     final Component carText = Text.translatable(isCJK ? "gui.mtr.arrival_car_cjk" : "gui.mtr.arrival_car", currentSchedule.trainCars);
                     if (renderArrivalNumber) {
                         final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-                    IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, String.valueOf(i + 1), HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 6, destinationStart, 16, 1F / scale, seconds > 0 ? textColor : firstTrainColor, false, light, null);
+                    IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, String.valueOf(i + 1), HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 8, destinationStart, 16, 1F / scale, seconds > 0 ? textColor : firstTrainColor, false, light, null);
                     bufferSource.endBatch();
                     }
                     final float newDestinationMaxWidth = destinationMaxWidth - carLengthMaxWidth;
@@ -192,7 +192,7 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                         final String platformName = platformIdToName.get(route.platformIds.get(currentSchedule.currentStationIndex).platformId);
                         if (platformName != null) {
                             final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-                            IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, platformName, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, destinationStart + newDestinationMaxWidth, 6, platformMaxWidth, 16, 1F / scale, seconds > 0 ? textColor : firstTrainColor, false, light, null);
+                            IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, platformName, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, destinationStart + newDestinationMaxWidth, 8, platformMaxWidth, 16, 1F / scale, seconds > 0 ? textColor : firstTrainColor, false, light, null);
                             bufferSource.endBatch();
                         }
                     }
@@ -204,7 +204,7 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                             matrices.scale(carLengthMaxWidth / carTextWidth, 1, 1);
                         }
                         final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-                        IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, carText.getString(), HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 6, carLengthMaxWidth, 16, 1F / scale, CAR_TEXT_COLOR, false, light, null);
+                        IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, carText.getString(), HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 8, carLengthMaxWidth, 16, 1F / scale, CAR_TEXT_COLOR, false, light, null);
                         bufferSource.endBatch();
                         matrices.popPose();
                     }
@@ -225,7 +225,7 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                     if (destinationWidth > newDestinationMaxWidth) {
                         matrices.scale(newDestinationMaxWidth / destinationWidth, 1, 1);
                     }
-                    IDrawing.drawStringWithFont(matrices, textRenderer, null, destinationString2, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 6, newDestinationMaxWidth, 16, 1F / scale, seconds > 0 ? textColor : firstTrainColor, false, light, null);
+                    IDrawing.drawStringWithFont(matrices, textRenderer, null, destinationString2, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 8, newDestinationMaxWidth, 16, 1F / scale, seconds > 0 ? textColor : firstTrainColor, false, light, null);
                     matrices.popPose();
                     if (arrivalText != null) {
                         matrices.pushPose();
@@ -236,7 +236,7 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                         } else {
                             matrices.translate(totalScaledWidth - arrivalWidth, 0, 0);
                         }
-                        IDrawing.drawStringWithFont(matrices, textRenderer, null, arrivalText.getString(), HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 6, arrivalMaxWidth, 16, 1F / scale, textColor, false, light, null);
+                        IDrawing.drawStringWithFont(matrices, textRenderer, null, arrivalText.getString(), HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 8, arrivalMaxWidth, 16, 1F / scale, textColor, false, light, null);
                         matrices.popPose();
                     }
                 }
@@ -285,7 +285,8 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                 if (scheduleForPlatform != null) {
                     scheduleForPlatform.forEach(scheduleEntry -> {
                         final Route route = ClientData.DATA_CACHE.routeIdMap.get(scheduleEntry.routeId);
-                        if (route != null && (renderType.showTerminatingPlatforms || scheduleEntry.currentStationIndex < route.platformIds.size() - 1)) {
+                        if (route != null) {
+                            // 对于MSD的PIDS，总是显示列车信息，包括终点站的列车
                             schedules.add(scheduleEntry);
                             platformIdToName.put(platform.id, platform.name);
                         }
