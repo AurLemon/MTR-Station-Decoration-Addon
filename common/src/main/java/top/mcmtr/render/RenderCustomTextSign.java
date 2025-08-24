@@ -91,53 +91,64 @@ public class RenderCustomTextSign<T extends BlockEntityMapper> extends BlockEnti
 
         try {
             final Font textRenderer = Minecraft.getInstance().font;
-            for (int i = 0; i < maxArrivals; i++) {
-                final String destinationString;
-                final String destinationString2;
-                final float trueFRowScale;
-                final float trueFRowTotalScaledWidth;
-                final int trueColor;
-                final String[] destinationSplit = customMessages[i].split("\\|");
-                destinationString = destinationSplit[0];
-                if (destinationSplit.length > 1) {
-                    destinationString2 = destinationSplit[1];
-                    trueFRowScale = fRowScale;
-                    trueFRowTotalScaledWidth = fRowTotalScaledWidth;
-                } else {
-                    destinationString2 = "";
-                    trueFRowScale = scale;
-                    trueFRowTotalScaledWidth = totalScaledWidth;
-                }
-                if (enableFirstTextColor && (i == 0)) {
-                    trueColor = firstTextColor;
-                } else {
-                    trueColor = textColor;
-                }
+            
+            for (int side = 0; side < 2; side++) {
+                final boolean isBackSide = side == 1;
 
-                // Render first line of text
-                matrices.pushPose();
-                matrices.translate(0.5, 0, 0.5);
-                UtilitiesClient.rotateYDegrees(matrices, (rotate90 ? 90 : 0) - facing.toYRot());
-                UtilitiesClient.rotateZDegrees(matrices, 180);
-                matrices.translate((startX - 8) / 16, -startY / 16 + i * maxHeight / maxArrivals / 16, (startZ - 8) / 16 - SMALL_OFFSET * 2);
-                matrices.scale(1F / trueFRowScale, 1F / trueFRowScale, 1F / trueFRowScale);
-                final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(com.mojang.blaze3d.vertex.Tesselator.getInstance().getBuilder());
-                IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, destinationString, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 6, trueFRowTotalScaledWidth, 16, 1F / trueFRowScale, trueColor, false, light, null);
-                bufferSource.endBatch();
-                matrices.popPose();
-
-                // Render second line of text if exists
-                if (!destinationString2.isEmpty()) {
+                for (int i = 0; i < maxArrivals; i++) {
+                    final String destinationString;
+                    final String destinationString2;
+                    final float trueFRowScale;
+                    final float trueFRowTotalScaledWidth;
+                    final int trueColor;
+                    final String[] destinationSplit = customMessages[i].split("\\|");
+                    destinationString = destinationSplit[0];
+                    if (destinationSplit.length > 1) {
+                        destinationString2 = destinationSplit[1];
+                        trueFRowScale = fRowScale;
+                        trueFRowTotalScaledWidth = fRowTotalScaledWidth;
+                    } else {
+                        destinationString2 = "";
+                        trueFRowScale = scale;
+                        trueFRowTotalScaledWidth = totalScaledWidth;
+                    }
+                    if (enableFirstTextColor && (i == 0)) {
+                        trueColor = firstTextColor;
+                    } else {
+                        trueColor = textColor;
+                    }
+                    
                     matrices.pushPose();
                     matrices.translate(0.5, 0, 0.5);
-                    UtilitiesClient.rotateYDegrees(matrices, (rotate90 ? 90 : 0) - facing.toYRot());
+                    if (isBackSide) {
+                        UtilitiesClient.rotateYDegrees(matrices, (rotate90 ? 90 : 0) - facing.toYRot() + 180);
+                    } else {
+                        UtilitiesClient.rotateYDegrees(matrices, (rotate90 ? 90 : 0) - facing.toYRot());
+                    }
                     UtilitiesClient.rotateZDegrees(matrices, 180);
-                    matrices.translate((startX - 8) / 16, (-startY / 16 + i * maxHeight / maxArrivals / 16) + (8 / fRowScale) + rowSpacing, (startZ - 8) / 16 - SMALL_OFFSET * 2);
-                    matrices.scale(1F / sRowScale, 1F / sRowScale, 1F / sRowScale);
-                    final MultiBufferSource.BufferSource bufferSource2 = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-                    IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource2, destinationString2, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 6, sRowTotalScaledWidth, 16, 1F / sRowScale, trueColor, false, light, null);
-                    bufferSource2.endBatch();
+                    matrices.translate((startX - 8) / 16, -startY / 16 + i * maxHeight / maxArrivals / 16, (startZ - 8) / 16 - SMALL_OFFSET * 2);
+                    matrices.scale(1F / trueFRowScale, 1F / trueFRowScale, 1F / trueFRowScale);
+                    final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(com.mojang.blaze3d.vertex.Tesselator.getInstance().getBuilder());
+                    IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, destinationString, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 6, trueFRowTotalScaledWidth, 16, 1F / trueFRowScale, trueColor, false, light, null);
+                    bufferSource.endBatch();
                     matrices.popPose();
+                    
+                    if (!destinationString2.isEmpty()) {
+                        matrices.pushPose();
+                        matrices.translate(0.5, 0, 0.5);
+                        if (isBackSide) {
+                            UtilitiesClient.rotateYDegrees(matrices, (rotate90 ? 90 : 0) - facing.toYRot() + 180);
+                        } else {
+                            UtilitiesClient.rotateYDegrees(matrices, (rotate90 ? 90 : 0) - facing.toYRot());
+                        }
+                        UtilitiesClient.rotateZDegrees(matrices, 180);
+                        matrices.translate((startX - 8) / 16, (-startY / 16 + i * maxHeight / maxArrivals / 16) + (8 / fRowScale) + rowSpacing, (startZ - 8) / 16 - SMALL_OFFSET * 2);
+                        matrices.scale(1F / sRowScale, 1F / sRowScale, 1F / sRowScale);
+                        final MultiBufferSource.BufferSource bufferSource2 = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+                        IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource2, destinationString2, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 6, sRowTotalScaledWidth, 16, 1F / sRowScale, trueColor, false, light, null);
+                        bufferSource2.endBatch();
+                        matrices.popPose();
+                    }
                 }
             }
         } catch (Exception e) {
