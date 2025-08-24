@@ -134,7 +134,8 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                 final ScheduleEntry currentSchedule = i + displayPageOffset < scheduleList.size() ? scheduleList.get(i + displayPageOffset) : null;
                 final Route route = currentSchedule == null ? null : ClientData.DATA_CACHE.routeIdMap.get(currentSchedule.routeId);
                 if (i < scheduleList.size() && !hideArrival[i] && route != null) {
-                    final String[] destinationSplit = ClientData.DATA_CACHE.getFormattedRouteDestination(route, currentSchedule.currentStationIndex, "").split("\\|");
+                    String routeDestination = getRouteDestination(route, currentSchedule);
+                    final String[] destinationSplit = routeDestination.split("\\|");
                     final boolean isLightRailRoute = route.isLightRailRoute;
                     final String[] routeNumberSplit = route.lightRailRouteNumber.split("\\|");
                     if (customMessages[i].isEmpty()) {
@@ -225,18 +226,24 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                     if (destinationWidth > newDestinationMaxWidth) {
                         matrices.scale(newDestinationMaxWidth / destinationWidth, 1, 1);
                     }
-                    IDrawing.drawStringWithFont(matrices, textRenderer, null, destinationString2, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 8, newDestinationMaxWidth, 16, 1F / scale, seconds > 0 ? textColor : firstTrainColor, false, light, null);
+                    final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+                    IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, destinationString2, HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 8, newDestinationMaxWidth, 16, 1F / scale, seconds > 0 ? textColor : firstTrainColor, false, light, null);
+                    bufferSource.endBatch();
                     matrices.popPose();
                     if (arrivalText != null) {
                         matrices.pushPose();
                         final int arrivalWidth = textRenderer.width(arrivalText);
+                        final float arrivalStartX = destinationStart + newDestinationMaxWidth + platformMaxWidth + carLengthMaxWidth;
                         if (arrivalWidth > arrivalMaxWidth) {
-                            matrices.translate(destinationStart + newDestinationMaxWidth + platformMaxWidth + carLengthMaxWidth, 0, 0);
+                            matrices.translate(arrivalStartX, 0, 0);
                             matrices.scale(arrivalMaxWidth / arrivalWidth, 1, 1);
                         } else {
-                            matrices.translate(totalScaledWidth - arrivalWidth, 0, 0);
+                            final float rightAlignedX = Math.min(arrivalStartX + arrivalMaxWidth - arrivalWidth, totalScaledWidth - arrivalWidth - 15);
+                            matrices.translate(rightAlignedX, 0, 0);
                         }
-                        IDrawing.drawStringWithFont(matrices, textRenderer, null, arrivalText.getString(), HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 8, arrivalMaxWidth, 16, 1F / scale, textColor, false, light, null);
+                        final MultiBufferSource.BufferSource arrivalBufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+                        IDrawing.drawStringWithFont(matrices, textRenderer, arrivalBufferSource, arrivalText.getString(), HorizontalAlignment.LEFT, VerticalAlignment.CENTER, 0, 8, arrivalMaxWidth, 16, 1F / scale, textColor, false, light, null);
+                        arrivalBufferSource.endBatch();
                         matrices.popPose();
                     }
                 }
@@ -248,7 +255,6 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
     }
 
     public List<ScheduleEntry> getSchedules(T entity, BlockPos pos, final Map<Long, String> platformIdToName) {
-        final Set<ScheduleEntry> schedules;
         final Station station = RailwayData.getStation(ClientData.STATIONS, ClientData.DATA_CACHE, pos);
         if (station == null) {
             return new ArrayList<>();
@@ -278,7 +284,7 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
             default:
                 platformIds = new HashSet<>();
         }
-        schedules = new HashSet<>();
+        final Set<ScheduleEntry> schedules = new HashSet<>();
         platforms.values().forEach(platform -> {
             if (platformIds.isEmpty() || platformIds.contains(platform.id)) {
                 final Set<ScheduleEntry> scheduleForPlatform = ClientData.SCHEDULES_FOR_PLATFORM.get(platform.id);
@@ -286,7 +292,6 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
                     scheduleForPlatform.forEach(scheduleEntry -> {
                         final Route route = ClientData.DATA_CACHE.routeIdMap.get(scheduleEntry.routeId);
                         if (route != null) {
-                            // 对于MSD的PIDS，总是显示列车信息，包括终点站的列车
                             schedules.add(scheduleEntry);
                             platformIdToName.put(platform.id, platform.name);
                         }
@@ -298,4 +303,59 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
         Collections.sort(scheduleList);
         return scheduleList;
     }
+    
+    private String getRouteDestination(Route route, ScheduleEntry currentSchedule) {
+        try {
+            if (route.platformIds != null && !route.platformIds.isEmpty()) {
+                Object lastPlatformObj = route.platformIds.get(route.platformIds.size() - 1);
+                
+                try {
+                    java.lang.reflect.Field customDestinationField = lastPlatformObj.getClass().getField("customDestination");
+                    String customDestination = (String) customDestinationField.get(lastPlatformObj);
+                    
+                    if (customDestination != null && !customDestination.trim().isEmpty()) {
+                        return customDestination;
+                    }
+                } catch (Exception e) {
+                    // 忽略错误，继续尝试其他方法
+                }
+                
+                try {
+                    java.lang.reflect.Field platformIdField = lastPlatformObj.getClass().getField("platformId");
+                    long platformId = (Long) platformIdField.get(lastPlatformObj);
+                    
+                    Platform platform = ClientData.DATA_CACHE.platformIdMap.get(platformId);
+                    if (platform != null) {
+                        Station station = getStationFromPlatform(platform);
+                        if (station != null && station.name != null && !station.name.isEmpty()) {
+                            return station.name;
+                        }
+                    }
+                } catch (Exception e) {
+                    // 忽略错误，继续尝试其他方法
+                }
+            }
+            
+            return route.name;
+
+        } catch (Exception e) {
+            System.err.println("Error getting route destination: " + e.getMessage());
+            return route.name;
+        }
+    }
+    
+    private Station getStationFromPlatform(Platform platform) {
+        try {
+            for (Station station : ClientData.STATIONS) {
+                Map<Long, Platform> stationPlatforms = ClientData.DATA_CACHE.requestStationIdToPlatforms(station.id);
+                if (stationPlatforms.containsKey(platform.id)) {
+                    return station;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error getting station from platform: " + e.getMessage());
+        }
+        return null;
+    }
+
 }
