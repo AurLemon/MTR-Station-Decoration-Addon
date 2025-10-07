@@ -1,5 +1,4 @@
 # MTR-Station-Decoration-Addon
-> Now we still working on it, when we finished, we will release it.
 
 [中文](README_zh.md)
 
@@ -7,7 +6,7 @@ A Station Decoration Addon for the Minecraft Transit Railway Mod, This is a fork
 
 We (or more accurately, Claude & Augment Agent, thanks to AI) tried our best to make it **compatible with MTR 3.2.2 and Minecraft 1.20.1 version** in Mod v1.3.4.
 
-If you found any bugs, please report it to us not the original repository. We will fix it as soon as possible (If we could).
+**If you found any bugs, please report it to us not the original repository. We will fix it as soon as possible (If we could).**
 
 Welcome PR! And we are also trying to do other works, like **London Underground MTR Addon** compatible with MTR 3.2.2 and Minecraft 1.20.1 version.
 
