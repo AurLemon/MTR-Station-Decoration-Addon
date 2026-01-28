@@ -147,7 +147,7 @@ public class RenderCustomTextSign<T extends BlockEntityMapper> extends BlockEnti
                 matrices.popPose();
 
                 // 第二行文字 - 正面
-                if (!destinationString2.isEmpty() && maxArrivals > 1) {
+                if (!destinationString2.isEmpty()) {
                     matrices.pushPose();
                     matrices.translate(0.5, 0, 0.5);
                     UtilitiesClient.rotateYDegrees(matrices, (rotate90 ? 90 : 0) - facing.toYRot());
@@ -163,7 +163,6 @@ public class RenderCustomTextSign<T extends BlockEntityMapper> extends BlockEnti
                     matrices.popPose();
 
                     // 第二行文字 - 背面
-                    if (maxArrivals > 1) {
                     matrices.pushPose();
                     matrices.translate(0.5, 0, 0.5);
                     UtilitiesClient.rotateYDegrees(matrices, (rotate90 ? -90 : -180) - facing.toYRot());
@@ -177,7 +176,6 @@ public class RenderCustomTextSign<T extends BlockEntityMapper> extends BlockEnti
                     IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource4, destinationString2, HorizontalAlignment.RIGHT, VerticalAlignment.CENTER, 0, 6, sRowTotalScaledWidth, 16, 1F / sRowScale, trueColor, false, light, null);
                     bufferSource4.endBatch();
                     matrices.popPose();
-                    }
                 }
             }
         } catch (Exception e) {
