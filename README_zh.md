@@ -1,13 +1,13 @@
 # MTR-Station-Decoration-Addon
-> 目前依然在解决问题，修复后会在 Release 处发布版本。
+> 原文是我练 CET 用英文写的，虽然也是一堆语法错误，哈哈。中文这篇是我机翻得，AI 味比较重。
 
 [English](README.md)
 
 Minecraft Transit Railway Mod 的一个车站装饰扩展模组，本仓库是从[AIDA64S/MTR-Station-Decoration-Addon](https://github.com/AIDA64S/MTR-Station-Decoration-Addon) Fork 而来的项目。
 
-我（或者更准确地说是 Claude 和 Augment Code 改的）尽量使模组 v1.3.4 版本**同时兼容 MTR 3.2.2 和 Minecraft 1.20.1 版本**。
+我（或者更准确地说是 GPT + Claude 等多个 LLM 配合帮我改的，我只负责测试和指挥它们，哈哈）只能尽量使 MSD v1.3.4 版本**同时兼容 MTR 3.2.2 和 Minecraft 1.20.1 版本**。
 
-如果您发现任何 bug，请向我们报告而不是原仓库。我们会尽快修复（如果我们会修）。
+如果您发现任何 bug，请在本仓库提交 Issue 而非原仓库，尽量修复（如果我们会修）。
 
 欢迎提交 PR！同时我们也正在尝试其他别的适配，比如让**伦敦地铁 MTR 扩展**也做到同时兼容 MTR 3.2.2 和 Minecraft 1.20.1 版本。
 
