@@ -2,6 +2,7 @@ package top.mcmtr.registry;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.minecraft.world.item.BlockItem;
@@ -49,6 +50,25 @@ public final class MSDBlocks {
 	private static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MSDNeoForge.MOD_ID);
 	private static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MSDNeoForge.MOD_ID);
 	private static final Map<String, DeferredItem<BlockItem>> BLOCK_ITEMS = new LinkedHashMap<>();
+	private static final Set<String> STATION_TAB_BLOCKS = Set.of(
+			"yuuni_pids", "yuuni_2_pids", "yuuni_pids_pole",
+			"yamanote_railway_sign_2_even", "yamanote_railway_sign_2_odd",
+			"yamanote_railway_sign_3_even", "yamanote_railway_sign_3_odd",
+			"yamanote_railway_sign_4_even", "yamanote_railway_sign_4_odd",
+			"yamanote_railway_sign_5_even", "yamanote_railway_sign_5_odd",
+			"yamanote_railway_sign_6_even", "yamanote_railway_sign_6_odd",
+			"yamanote_railway_sign_7_even", "yamanote_railway_sign_7_odd",
+			"yamanote_railway_sign_middle", "yamanote_railway_sign_pole",
+			"yamanote_4_pids", "yamanote_5_pids", "yamanote_6_pids", "yamanote_7_pids",
+			"display_board_horizontal", "display_board_vertical",
+			"yuuni_ticket", "surveillance_cameras", "surveillance_cameras_wall",
+			"hall_seat_middle", "hall_seat_side", "hall_seat_side_mirror",
+			"decoration_ceiling", "decoration_ceiling_light", "decoration_book", "decoration_floor", "decoration_pc", "decoration_stair",
+			"railing_stair_start", "railing_stair", "railing_stair_end", "railing_stair_corner", "railing_stair_corner_2",
+			"railing_stair_start_mirror", "railing_stair_mirror", "railing_stair_end_mirror", "railing_stair_corner_mirror", "railing_stair_corner_mirror_2",
+			"railing_stair_glass_1", "railing_stair_glass_2", "railing_stair_glass_3", "railing_stair_glass_4", "railing_stair_glass_5",
+			"railing_stair_glass_mirror_1", "railing_stair_glass_mirror_2", "railing_stair_glass_mirror_3", "railing_stair_glass_mirror_4", "railing_stair_glass_mirror_5"
+	);
 
 	public static final DeferredBlock<Block> YUUNI_PIDS =
 			register("yuuni_pids", () -> new YuuniPIDSBlock(baseProperties().noOcclusion(), 2, () -> MSDBlockEntities.YUUNI_PIDS.get()));
@@ -245,6 +265,22 @@ public final class MSDBlocks {
 
 	public static void addCreativeTabItems(Consumer<Item> consumer) {
 		BLOCK_ITEMS.values().forEach(item -> consumer.accept(item.get()));
+	}
+
+	public static void addStationTabItems(Consumer<Item> consumer) {
+		BLOCK_ITEMS.forEach((name, item) -> {
+			if (STATION_TAB_BLOCKS.contains(name)) {
+				consumer.accept(item.get());
+			}
+		});
+	}
+
+	public static void addExternalTabItems(Consumer<Item> consumer) {
+		BLOCK_ITEMS.forEach((name, item) -> {
+			if (!STATION_TAB_BLOCKS.contains(name)) {
+				consumer.accept(item.get());
+			}
+		});
 	}
 
 	private static DeferredBlock<Block> register(String name, Supplier<? extends Block> supplier) {

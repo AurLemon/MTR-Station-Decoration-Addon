@@ -22,6 +22,7 @@ import top.mcmtr.packet.MSDPacketUpdateModel;
 import top.mcmtr.packet.MSDPacketUpdateYamanoteRailwaySignConfig;
 import top.mcmtr.registry.MSDBlockEntities;
 import top.mcmtr.registry.MSDBlocks;
+import top.mcmtr.registry.MSDCreativeTabs;
 import top.mcmtr.registry.MSDItems;
 
 @Mod(MSDNeoForge.MOD_ID)
@@ -34,6 +35,7 @@ public class MSDNeoForge {
 		MSDBlocks.register(modEventBus);
 		MSDBlockEntities.register(modEventBus);
 		MSDItems.register(modEventBus);
+		MSDCreativeTabs.register(modEventBus);
 		new MSDNeoForgeRuntime();
 		NeoForge.EVENT_BUS.addListener(MSDProbeBlockEntityCommand::register);
 		NeoForge.EVENT_BUS.addListener(MSDProbeCatenaryCommand::register);

@@ -42,4 +42,11 @@ public final class MSDItems {
 		consumer.accept(CATENARY_REMOVER.get());
 		consumer.accept(RIGID_CATENARY_REMOVER.get());
 	}
+
+	public static void addStationTabItems(Consumer<Item> consumer) {
+	}
+
+	public static void addExternalTabItems(Consumer<Item> consumer) {
+		addCreativeTabItems(consumer);
+	}
 }
