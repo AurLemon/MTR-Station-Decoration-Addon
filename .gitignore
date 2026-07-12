@@ -38,3 +38,7 @@ forge/src/main/java/top/mcmtr/mixin
 forge/src/main/java/top/mcmtr/core
 forge/src/main/resources/assets
 forge/src/main/resources/META-INF
+
+# compat files
+server-smoke-rigid/
+scripts/

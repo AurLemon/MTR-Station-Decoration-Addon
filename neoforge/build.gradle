@@ -1,0 +1,105 @@
+plugins {
+	id "net.neoforged.moddev" version "2.0.141"
+}
+
+import org.gradle.api.file.DuplicatesStrategy
+
+def supportedMinecraftVersion = "1.21.1"
+def selectedMinecraftVersion = (rootProject.findProperty("minecraft_version") ?: rootProject.findProperty("minecraftVersion") ?: rootProject.properties.minecraftVersion).toString()
+def isSupportedMinecraftVersion = selectedMinecraftVersion == supportedMinecraftVersion
+
+sourceSets.main.java.setSrcDirs([
+	"src/main/java",
+	"../fabric/src/main/java/top/mcmtr/core"
+])
+sourceSets.main.resources.setSrcDirs([
+	"src/main/resources",
+	"../fabric/src/main/resources",
+	"../forge/src/main/resources"
+])
+sourceSets.main.resources.srcDir "src/generated/resources"
+
+neoForge {
+	version = rootProject.properties["neoforgeVersion_${supportedMinecraftVersion}"]
+
+	runs {
+		client {
+			client()
+		}
+
+		server {
+			server()
+			programArgument "--nogui"
+		}
+
+		configureEach {
+			systemProperty "forge.logging.markers", "REGISTRIES"
+			logLevel = org.slf4j.event.Level.DEBUG
+		}
+	}
+
+	mods {
+		msd {
+			sourceSet sourceSets.main
+		}
+	}
+}
+
+dependencies {
+	annotationProcessor "org.spongepowered:mixin:+:processor"
+	implementation "maven.modrinth:minecraft-transit-railway:NEOFORGE-${rootProject.properties["mtrVersion_${supportedMinecraftVersion}_NeoForge"]}+${supportedMinecraftVersion}"
+}
+
+processResources {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	inputs.property "minecraft_version", supportedMinecraftVersion
+	inputs.property "mod_version", project.version
+	inputs.property "neoforge_version", rootProject.properties["neoforgeVersion_${supportedMinecraftVersion}"]
+	inputs.property "neoforge_min_version", rootProject.properties["neoforgeMinVersion_${supportedMinecraftVersion}"]
+	inputs.property "mtr_version", rootProject.properties["mtrVersion_${supportedMinecraftVersion}_NeoForge"]
+
+	filesMatching("META-INF/neoforge.mods.toml") {
+		expand(
+			"minecraft_version": supportedMinecraftVersion,
+			"mod_version": project.version,
+			"neoforge_version": rootProject.properties["neoforgeVersion_${supportedMinecraftVersion}"],
+			"neoforge_min_version": rootProject.properties["neoforgeMinVersion_${supportedMinecraftVersion}"],
+			"mtr_version": rootProject.properties["mtrVersion_${supportedMinecraftVersion}_NeoForge"]
+		)
+	}
+}
+
+tasks.withType(AbstractArchiveTask).configureEach {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(21))
+	}
+	withSourcesJar()
+}
+
+tasks.register("moveBuild") {
+	doLast {
+		delete fileTree("../build").matching {
+			include "**/*neoforge*"
+		}
+		copy {
+			from "build/libs/${rootProject.name}-neoforge-${project.version}.jar"
+			into "../build"
+		}
+	}
+}
+
+tasks.named("build").configure {
+	if (isSupportedMinecraftVersion) {
+		finalizedBy tasks.moveBuild
+	}
+}
+
+if (!isSupportedMinecraftVersion) {
+	tasks.configureEach {
+		enabled = false
+	}
+}

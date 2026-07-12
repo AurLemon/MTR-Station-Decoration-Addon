@@ -2,10 +2,13 @@ package top.mcmtr.core;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mtr.core.data.Position;
 import org.mtr.core.servlet.QueueObject;
 import org.mtr.core.tool.Utilities;
 import org.mtr.libraries.it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.mtr.libraries.it.unimi.dsi.fastutil.objects.ObjectImmutableList;
+import top.mcmtr.core.data.Catenary;
+import top.mcmtr.core.data.RigidCatenary;
 import top.mcmtr.core.simulation.MSDSimulator;
 
 import javax.annotation.Nullable;
@@ -56,6 +59,22 @@ public class MSDMain {
 
     public void save() {
         simulators.forEach(MSDSimulator::save);
+    }
+
+    @Nullable
+    public RigidCatenary getRigidCatenary(int worldIndex, Position position) {
+        if (worldIndex < 0 || worldIndex >= simulators.size()) {
+            return null;
+        }
+        return simulators.get(worldIndex).getRigidCatenary(position);
+    }
+
+    @Nullable
+    public Catenary getCatenary(int worldIndex, Position position) {
+        if (worldIndex < 0 || worldIndex >= simulators.size()) {
+            return null;
+        }
+        return simulators.get(worldIndex).getCatenary(position);
     }
 
     public void stop() {

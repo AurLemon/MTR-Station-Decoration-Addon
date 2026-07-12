@@ -37,8 +37,8 @@ public final class RigidCatenaryMath {
         final long zEnd = position2.getZ();
         final Vector vecDifference = new Vector(position2.getX() - position1.getX(), 0, position2.getZ() - position1.getZ());
         final Vector vecDifferenceRotated = vecDifference.rotateY((float) angle1.angleRadians);
-        final double deltaForward = vecDifferenceRotated.z;
-        final double deltaSide = vecDifferenceRotated.x;
+        final double deltaForward = vecDifferenceRotated.z();
+        final double deltaSide = vecDifferenceRotated.x();
         if (angle1.isParallel(angle2)) {
             if (Math.abs(deltaForward) < ACCEPT_THRESHOLD) {
                 h1 = angle1.cos;
@@ -69,8 +69,8 @@ public final class RigidCatenaryMath {
                     reverseT1 = deltaForward < 0 != deltaSide < 0;
                     reverseT2 = !reverseT1;
                     tStart1 = getTBounds(xStart, h1, zStart, k1, r1);
-                    tEnd1 = getTBounds(xStart + vecDifference.x / 2, h1, zStart + vecDifference.z / 2, k1, r1, tStart1, reverseT1);
-                    tStart2 = getTBounds(xStart + vecDifference.x / 2, h2, zStart + vecDifference.z / 2, k2, r2);
+                    tEnd1 = getTBounds(xStart + vecDifference.x() / 2, h1, zStart + vecDifference.z() / 2, k1, r1, tStart1, reverseT1);
+                    tStart2 = getTBounds(xStart + vecDifference.x() / 2, h2, zStart + vecDifference.z() / 2, k2, r2);
                     tEnd2 = getTBounds(xEnd, h2, zEnd, k2, r2, tStart2, reverseT2);
                     isStraight1 = isStraight2 = false;
                 } else {
@@ -82,8 +82,8 @@ public final class RigidCatenaryMath {
                 }
             }
         } else {
-            final Angle newAngle1 = vecDifferenceRotated.x < -ACCEPT_THRESHOLD ? angle1.getOpposite() : angle1;
-            final Angle newAngle2 = angle2.cos * vecDifference.x + angle2.sin * vecDifference.z < -ACCEPT_THRESHOLD ? angle2.getOpposite() : angle2;
+            final Angle newAngle1 = vecDifferenceRotated.x() < -ACCEPT_THRESHOLD ? angle1.getOpposite() : angle1;
+            final Angle newAngle2 = angle2.cos * vecDifference.x() + angle2.sin * vecDifference.z() < -ACCEPT_THRESHOLD ? angle2.getOpposite() : angle2;
             final double angleForward = Math.atan2(deltaForward, deltaSide);
             final Angle railAngleDifference = newAngle2.sub(newAngle1);
             final double angleDifference = railAngleDifference.angleRadians;
@@ -188,7 +188,7 @@ public final class RigidCatenaryMath {
                 final Vector corner8 = getPositionXZ(h1, k1, r1, t2, -0.09375F, isStraight1);
                 final double y1 = getPositionY(i);
                 final double y2 = getPositionY(i + increment1);
-                final SolidVectorLocation locationTemp1 = new SolidVectorLocation(corner1.x, corner1.z, corner2.x, corner2.z, corner3.x, corner3.z, corner4.x, corner4.z, corner5.x, corner5.z, corner6.x, corner6.z, corner7.x, corner7.z, corner8.x, corner8.z, y1, y2);
+                final SolidVectorLocation locationTemp1 = new SolidVectorLocation(corner1.x(), corner1.z(), corner2.x(), corner2.z(), corner3.x(), corner3.z(), corner4.x(), corner4.z(), corner5.x(), corner5.z(), corner6.x(), corner6.z(), corner7.x(), corner7.z(), corner8.x(), corner8.z(), y1, y2);
                 corners1.add(locationTemp1);
             }
             for (double i = 0; i < count2 - 0.1; i += increment2) {
@@ -204,7 +204,7 @@ public final class RigidCatenaryMath {
                 final Vector corner8 = getPositionXZ(h2, k2, r2, t2, -0.09375F, isStraight2);
                 final double y1 = getPositionY(i + rawValueOffset);
                 final double y2 = getPositionY(i + increment2 + rawValueOffset);
-                final SolidVectorLocation locationTemp = new SolidVectorLocation(corner1.x, corner1.z, corner2.x, corner2.z, corner3.x, corner3.z, corner4.x, corner4.z, corner5.x, corner5.z, corner6.x, corner6.z, corner7.x, corner7.z, corner8.x, corner8.z, y1, y2);
+                final SolidVectorLocation locationTemp = new SolidVectorLocation(corner1.x(), corner1.z(), corner2.x(), corner2.z(), corner3.x(), corner3.z(), corner4.x(), corner4.z(), corner5.x(), corner5.z(), corner6.x(), corner6.z(), corner7.x(), corner7.z(), corner8.x(), corner8.z(), y1, y2);
                 corners2.add(locationTemp);
             }
             checkRun = !checkRun;

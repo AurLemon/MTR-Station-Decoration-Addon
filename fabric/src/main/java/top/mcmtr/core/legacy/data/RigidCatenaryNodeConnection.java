@@ -33,13 +33,13 @@ public final class RigidCatenaryNodeConnection extends RigidCatenaryConnectionSc
     private Angle getAngle(boolean reverse) {
         final Vector vector1 = getPosition(0, reverse);
         final Vector vector2 = getPosition(0.1, reverse);
-        return Angle.fromAngle((float) Math.toDegrees(Math.atan2(vector2.z - vector1.z, vector2.x - vector1.x)));
+        return Angle.fromAngle((float) Math.toDegrees(Math.atan2(vector2.z() - vector1.z(), vector2.x() - vector1.x())));
     }
 
     private Vector getPosition(double rawValue, boolean reverse) {
         final double count1 = Math.abs(tEnd1 - tStart1);
         final double count2 = Math.abs(tEnd2 - tStart2);
-        final double clampedValue = Utilities.clamp(rawValue, 0, count1 + count2);
+        final double clampedValue = Utilities.clampSafe(rawValue, 0, count1 + count2);
         final double value = reverse ? count1 + count2 - clampedValue : clampedValue;
 
         if (value <= count1) {

@@ -25,5 +25,17 @@ subprojects {
 
 	repositories {
 		flatDir { dirs "../libs" }
+		maven { url "https://maven.neoforged.net/releases/" }
+		exclusiveContent {
+			forRepository {
+				maven {
+					name = "Modrinth"
+					url = "https://api.modrinth.com/maven"
+				}
+			}
+			filter {
+				includeGroup "maven.modrinth"
+			}
+		}
 	}
 }

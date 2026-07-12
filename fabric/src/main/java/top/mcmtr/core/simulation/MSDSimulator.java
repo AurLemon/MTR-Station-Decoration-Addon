@@ -1,5 +1,6 @@
 package top.mcmtr.core.simulation;
 
+import org.mtr.core.data.Position;
 import org.mtr.core.serializer.SerializedDataBaseWithId;
 import org.mtr.core.servlet.MessageQueue;
 import org.mtr.core.servlet.QueueObject;
@@ -72,6 +73,22 @@ public class MSDSimulator extends MSDData implements Utilities {
 
     public void sendMessageC2S(QueueObject queueObject) {
         messageQueueC2S.put(queueObject);
+    }
+
+    public RigidCatenary getRigidCatenary(Position position) {
+        return positionsToRigidCatenary.getOrDefault(position, new org.mtr.libraries.it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap<>())
+                .values()
+                .stream()
+                .findFirst()
+                .orElse(null);
+    }
+
+    public Catenary getCatenary(Position position) {
+        return positionsToCatenary.getOrDefault(position, new org.mtr.libraries.it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap<>())
+                .values()
+                .stream()
+                .findFirst()
+                .orElse(null);
     }
 
     private void save(boolean useReducedHash) {
