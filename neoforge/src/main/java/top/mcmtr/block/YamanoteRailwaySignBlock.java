@@ -1,7 +1,5 @@
 package top.mcmtr.block;
 
-import java.util.Arrays;
-import java.util.Locale;
 import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -75,7 +73,7 @@ public class YamanoteRailwaySignBlock extends Block implements EntityBlock {
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		final Direction facing = context.getHorizontalDirection().getOpposite();
+		final Direction facing = context.getHorizontalDirection();
 		return IBlock.isReplaceable(context, facing.getClockWise(), getMiddleLength() + 2)
 				? defaultBlockState().setValue(FACING, facing)
 				: null;
@@ -159,7 +157,7 @@ public class YamanoteRailwaySignBlock extends Block implements EntityBlock {
 
 	@Override
 	protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		return Shapes.empty();
+		return getShape(state, level, pos, context);
 	}
 
 	@Override
@@ -268,15 +266,19 @@ public class YamanoteRailwaySignBlock extends Block implements EntityBlock {
 
 	public static class YamanoteRailwaySignBlockEntity extends BlockEntity {
 
-		private final LongAVLTreeSet selectedIds = new LongAVLTreeSet();
+		private final LongAVLTreeSet[] selectedIds;
 		private final String[] signIds;
 
 		public YamanoteRailwaySignBlockEntity(int length, boolean isOdd, BlockEntityType<?> type, BlockPos pos, BlockState state) {
 			super(type, pos, state);
+			this.selectedIds = new LongAVLTreeSet[length];
 			this.signIds = new String[length];
+			for (int i = 0; i < length; i++) {
+				this.selectedIds[i] = new LongAVLTreeSet();
+			}
 		}
 
-		public LongAVLTreeSet getSelectedIds() {
+		public LongAVLTreeSet[] getSelectedIds() {
 			return selectedIds;
 		}
 
@@ -285,8 +287,21 @@ public class YamanoteRailwaySignBlock extends Block implements EntityBlock {
 		}
 
 		public void setData(LongAVLTreeSet selectedIds, String[] signTypes) {
-			this.selectedIds.clear();
-			this.selectedIds.addAll(selectedIds);
+			final LongAVLTreeSet[] selectedIdsBySlot = getSelectedIds();
+			final LongAVLTreeSet[] updatedSelectedIds = new LongAVLTreeSet[selectedIdsBySlot.length];
+			for (int i = 0; i < selectedIdsBySlot.length; i++) {
+				updatedSelectedIds[i] = new LongAVLTreeSet(selectedIds);
+			}
+			setData(updatedSelectedIds, signTypes);
+		}
+
+		public void setData(LongAVLTreeSet[] selectedIds, String[] signTypes) {
+			for (int i = 0; i < this.selectedIds.length; i++) {
+				this.selectedIds[i].clear();
+				if (i < selectedIds.length && selectedIds[i] != null) {
+					this.selectedIds[i].addAll(selectedIds[i]);
+				}
+			}
 			if (signIds.length == signTypes.length) {
 				System.arraycopy(signTypes, 0, signIds, 0, signTypes.length);
 			}
@@ -309,19 +324,37 @@ public class YamanoteRailwaySignBlock extends Block implements EntityBlock {
 		@Override
 		protected void loadAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
 			super.loadAdditional(tag, registries);
-			selectedIds.clear();
-			Arrays.stream(tag.getLongArray(KEY_SELECTED_IDS)).forEach(selectedIds::add);
+			for (int i = 0; i < selectedIds.length; i++) {
+				selectedIds[i].clear();
+			}
+			if (tag.contains(KEY_SELECTED_IDS) && selectedIds.length > 0 && selectedIds[0].isEmpty()) {
+				final LongAVLTreeSet legacySelectedIds = new LongAVLTreeSet(tag.getLongArray(KEY_SELECTED_IDS));
+				for (int i = 0; i < selectedIds.length; i++) {
+					selectedIds[i].clear();
+					selectedIds[i].addAll(legacySelectedIds);
+				}
+			}
 			for (int i = 0; i < signIds.length; i++) {
-				final String signId = tag.getString(KEY_SIGN_LENGTH + i);
-				signIds[i] = signId.isEmpty() ? null : signId.toLowerCase(Locale.ENGLISH);
+				if (tag.contains("selected_ids_" + i)) {
+					selectedIds[i].addAll(new LongAVLTreeSet(tag.getLongArray("selected_ids_" + i)));
+				}
+				if (tag.contains(KEY_SIGN_LENGTH + i)) {
+					final String signId = tag.getString(KEY_SIGN_LENGTH + i);
+					signIds[i] = signId.isEmpty() ? null : signId;
+				} else {
+					signIds[i] = null;
+				}
 			}
 		}
 
 		@Override
 		protected void saveAdditional(CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
 			super.saveAdditional(tag, registries);
-			tag.putLongArray(KEY_SELECTED_IDS, new java.util.ArrayList<>(selectedIds));
+			if (selectedIds.length > 0) {
+				tag.putLongArray(KEY_SELECTED_IDS, new java.util.ArrayList<>(selectedIds[0]));
+			}
 			for (int i = 0; i < signIds.length; i++) {
+				tag.putLongArray("selected_ids_" + i, new java.util.ArrayList<>(selectedIds[i]));
 				tag.putString(KEY_SIGN_LENGTH + i, signIds[i] == null ? "" : signIds[i]);
 			}
 		}

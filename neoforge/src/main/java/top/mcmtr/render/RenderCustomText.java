@@ -2,6 +2,7 @@ package top.mcmtr.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -69,8 +70,11 @@ public class RenderCustomText extends BlockEntityRendererExtension<AbstractStand
 			int packedLight,
 			int packedOverlay) {
 		final Direction facing = IBlock.getStatePropertySafe(blockEntity.getBlockState(), AbstractStandingSignBlock.FACING);
+		final StandingSignRenderTuning tuning = StandingSignRenderCalibration.resolve(RenderCalibrationKey.fromBlockState(blockEntity.getBlockState()));
 		renderSide(blockEntity, poseStack, bufferSource, packedLight, facing, false);
-		renderSide(blockEntity, poseStack, bufferSource, packedLight, facing.getOpposite(), true);
+		if (tuning.renderBackText()) {
+			renderSide(blockEntity, poseStack, bufferSource, packedLight, facing, true);
+		}
 	}
 
 	private void renderSide(
@@ -79,7 +83,8 @@ public class RenderCustomText extends BlockEntityRendererExtension<AbstractStand
 			MultiBufferSource bufferSource,
 			int packedLight,
 			Direction facing,
-			boolean rightAlign) {
+			boolean backSide) {
+		final StandingSignRenderTuning tuning = StandingSignRenderCalibration.resolve(RenderCalibrationKey.fromBlockState(blockEntity.getBlockState()));
 		for (int i = 0; i < maxMessages; i++) {
 			final String[] splitText = blockEntity.getMessage(i).split("\\|", 2);
 			final String bigText = splitText[0];
@@ -88,13 +93,15 @@ public class RenderCustomText extends BlockEntityRendererExtension<AbstractStand
 			final float smallScale = smallText == null ? 0 : secondRowScale;
 
 			poseStack.pushPose();
-			poseStack.translate(0.5D, 0D, 0.5D);
-			poseStack.mulPose(Axis.YP.rotationDegrees((rotate90 ? 90 : 0) - facing.toYRot()));
+			poseStack.mulPose(Axis.YP.rotationDegrees(tuning.yawCorrectionDegrees() + (rotate90 ? 90 : 0) - facing.toYRot() + (backSide ? 180F : 0F)));
 			poseStack.mulPose(Axis.ZP.rotationDegrees(180));
-			poseStack.translate(rightAlign ? (13 - startX) / 16F : (startX - 8) / 16F, -startY / 16F + i * maxHeight / maxMessages / 16F, (startZ - 8) / 16F - 0.0025F);
-			renderText(poseStack, bufferSource, bigText, colors[i], maxWidth * bigScale / 16F, 0, bigScale, rightAlign, packedLight);
+			poseStack.translate(
+					(startX - 8) / 16F + tuning.translateX(),
+					-startY / 16F + i * maxHeight / maxMessages / 16F + tuning.translateY(),
+					(startZ - 8) / 16F + (backSide ? tuning.backDepthNudge() : tuning.frontDepthNudge()) + tuning.translateZ());
+			renderText(poseStack, bufferSource, bigText, colors[i], maxWidth * bigScale / 16F, 0, bigScale, false, tuning, packedLight);
 			if (smallText != null) {
-				renderText(poseStack, bufferSource, smallText, colors[i], maxWidth * smallScale / 16F, 8 / bigScale + rowSpacing, smallScale, rightAlign, packedLight);
+				renderText(poseStack, bufferSource, smallText, colors[i], maxWidth * smallScale / 16F, 8 / bigScale + rowSpacing, smallScale, false, tuning, packedLight);
 			}
 			poseStack.popPose();
 		}
@@ -109,6 +116,7 @@ public class RenderCustomText extends BlockEntityRendererExtension<AbstractStand
 			double y,
 			float scale,
 			boolean rightAlign,
+			StandingSignRenderTuning tuning,
 			int packedLight) {
 		poseStack.pushPose();
 		poseStack.translate(0, y, 0);
@@ -118,7 +126,7 @@ public class RenderCustomText extends BlockEntityRendererExtension<AbstractStand
 		if (textWidth > maxWidth) {
 			poseStack.scale(maxWidth / textWidth, 1, 1);
 		}
-		font.drawInBatch(text, rightAlign ? Math.max(0, maxWidth - textWidth) : 0, 0, color | 0xFF000000, false, poseStack.last().pose(), bufferSource, net.minecraft.client.gui.Font.DisplayMode.NORMAL, 0, packedLight);
+		font.drawInBatch(text, rightAlign ? Math.max(0, maxWidth - textWidth) : 0, 0, color | 0xFF000000, false, poseStack.last().pose(), bufferSource, tuning.seeThroughText() ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL, 0, packedLight);
 		poseStack.popPose();
 	}
 }

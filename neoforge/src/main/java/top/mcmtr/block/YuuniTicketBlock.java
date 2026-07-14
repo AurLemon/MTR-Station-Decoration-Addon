@@ -40,7 +40,7 @@ public class YuuniTicketBlock extends BlockDirectionalDoubleBlockBase {
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		final BlockState state = super.getStateForPlacement(context);
-		return state == null ? null : state.setValue(FACING, context.getHorizontalDirection().getOpposite());
+		return state == null ? null : state.setValue(FACING, context.getHorizontalDirection());
 	}
 
 	@Override

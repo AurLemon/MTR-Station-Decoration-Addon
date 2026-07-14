@@ -10,6 +10,9 @@ authors = "AIDA64S, Santorsia, Zbx1425"
 description = "A Station Decoration Addon for the Minecraft Transit Railway Mod"
 logoFile = "icon.png"
 
+[[mixins]]
+config = "msd-neoforge.mixins.json"
+
 [[dependencies.msd]]
 modId = "neoforge"
 type = "required"

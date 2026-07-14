@@ -1,0 +1,20 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "top.mcmtr.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"refmap": "msd.refmap.json",
+	"mixins": [
+		"PacketUpdateRailwaySignConfigMixin"
+	],
+	"client": [
+		"PIDSConfigScreenMixin",
+		"RailwaySignScreenAccessor",
+		"RenderPIDSMixin",
+		"WindowBaseMixin"
+	],
+	"server": [],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

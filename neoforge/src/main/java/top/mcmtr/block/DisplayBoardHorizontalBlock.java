@@ -35,7 +35,7 @@ public class DisplayBoardHorizontalBlock extends Block {
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(TYPE, 0);
+		return defaultBlockState().setValue(FACING, context.getHorizontalDirection()).setValue(TYPE, 0);
 	}
 
 	@Override

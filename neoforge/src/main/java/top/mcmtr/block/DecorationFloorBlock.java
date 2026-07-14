@@ -12,7 +12,7 @@ import org.mtr.block.IBlock;
 
 public class DecorationFloorBlock extends AbstractChangeModelBlock {
 
-	public static final IntegerProperty TYPE = IntegerProperty.create("type", 0, 1);
+	public static final IntegerProperty TYPE = IntegerProperty.create("type", 0, 5);
 
 	public DecorationFloorBlock(BlockBehaviour.Properties properties) {
 		super(properties);

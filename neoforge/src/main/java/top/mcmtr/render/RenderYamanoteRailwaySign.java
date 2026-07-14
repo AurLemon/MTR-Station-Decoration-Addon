@@ -27,24 +27,22 @@ public class RenderYamanoteRailwaySign extends BlockEntityRendererExtension<Yama
 		}
 
 		final Direction facing = blockEntity.getBlockState().getValue(YamanoteRailwaySignBlock.FACING);
-		final int length = signBlock.getLength();
-		final org.mtr.libraries.it.unimi.dsi.fastutil.longs.LongAVLTreeSet[] selectedIds = new org.mtr.libraries.it.unimi.dsi.fastutil.longs.LongAVLTreeSet[length];
-		for (int i = 0; i < length; i++) {
-			selectedIds[i] = blockEntity.getSelectedIds();
-		}
-
+		final YamanoteRenderCalibration.Transform calibration = YamanoteRenderCalibration.get(RenderCalibrationKey.fromBlockState(blockEntity.getBlockState()));
 		poseStack.pushPose();
-		poseStack.translate(signBlock.getXStart() / 16F - 0.5F, 0.03125F, -0.0625F);
-		poseStack.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
+		poseStack.mulPose(Axis.YP.rotationDegrees(-facing.toYRot() + calibration.yaw()));
 		poseStack.mulPose(Axis.ZP.rotationDegrees(180));
+		poseStack.translate(
+				signBlock.getXStart() / 16F - 0.5F + calibration.x(),
+				-0.53125F + calibration.y(),
+				-0.06562500004656613F + calibration.z());
 		SignResource.render(
 				poseStack,
 				bufferSource,
 				blockEntity.getBlockPos(),
-				selectedIds,
+				blockEntity.getSelectedIds(),
 				blockEntity.getSignIds(),
 				0.5F,
-				0.0F,
+				0.003125F,
 				false);
 		poseStack.popPose();
 	}

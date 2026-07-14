@@ -7,15 +7,20 @@ import org.gradle.api.file.DuplicatesStrategy
 def supportedMinecraftVersion = "1.21.1"
 def selectedMinecraftVersion = (rootProject.findProperty("minecraft_version") ?: rootProject.findProperty("minecraftVersion") ?: rootProject.properties.minecraftVersion).toString()
 def isSupportedMinecraftVersion = selectedMinecraftVersion == supportedMinecraftVersion
+def standingSignPreset = (project.findProperty("standing_sign_preset") ?: "default").toString()
+def generatedStandingSignPresetDir = layout.buildDirectory.dir("generated/sources/standingSignPreset/main/java")
+def generatedRenderCalibrationFlagDir = layout.buildDirectory.dir("generated/resources/renderCalibration")
 
 sourceSets.main.java.setSrcDirs([
 	"src/main/java",
-	"../fabric/src/main/java/top/mcmtr/core"
+	"../fabric/src/main/java/top/mcmtr/core",
+	generatedStandingSignPresetDir
 ])
 sourceSets.main.resources.setSrcDirs([
 	"src/main/resources",
 	"../fabric/src/main/resources",
-	"../forge/src/main/resources"
+	"../forge/src/main/resources",
+	generatedRenderCalibrationFlagDir
 ])
 sourceSets.main.resources.srcDir "src/generated/resources"
 
@@ -69,9 +74,55 @@ processResources {
 	}
 }
 
+tasks.register("generateStandingSignPresetSource") {
+	inputs.property("standingSignPreset", standingSignPreset)
+	outputs.dir(generatedStandingSignPresetDir)
+	doLast {
+		def outputDir = generatedStandingSignPresetDir.get().file("top/mcmtr/render").asFile
+		outputDir.mkdirs()
+		def outputFile = new File(outputDir, "StandingSignRenderGeneratedPreset.java")
+		outputFile.text = """package top.mcmtr.render;
+
+public final class StandingSignRenderGeneratedPreset {
+
+\tpublic static final String ACTIVE = "${standingSignPreset}";
+
+\tprivate StandingSignRenderGeneratedPreset() {
+\t}
+}
+"""
+	}
+}
+
+tasks.register("generateRenderCalibrationFlag") {
+	inputs.property("standingSignPreset", standingSignPreset)
+	outputs.dir(generatedRenderCalibrationFlagDir)
+	doLast {
+		def outputDir = generatedRenderCalibrationFlagDir.get().file("assets/msd").asFile
+		outputDir.mkdirs()
+		def flagFile = new File(outputDir, "render_calibration_enabled.flag")
+		if (standingSignPreset == "calibration") {
+			flagFile.text = "enabled\n"
+		} else if (flagFile.exists()) {
+			flagFile.delete()
+		}
+	}
+}
+
+tasks.named("compileJava").configure {
+	dependsOn tasks.named("generateStandingSignPresetSource")
+}
+
+tasks.named("processResources").configure {
+	dependsOn tasks.named("generateRenderCalibrationFlag")
+}
+
 tasks.withType(AbstractArchiveTask).configureEach {
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 	archiveBaseName.set("${rootProject.name}-neoforge")
+	if (standingSignPreset == "calibration") {
+		archiveClassifier.set("calibration")
+	}
 }
 
 java {
@@ -79,6 +130,11 @@ java {
 		languageVersion.set(JavaLanguageVersion.of(21))
 	}
 	withSourcesJar()
+}
+
+tasks.matching { it.name == "sourcesJar" }.configureEach {
+	dependsOn tasks.named("generateStandingSignPresetSource")
+	dependsOn tasks.named("generateRenderCalibrationFlag")
 }
 
 tasks.register("moveBuild") {

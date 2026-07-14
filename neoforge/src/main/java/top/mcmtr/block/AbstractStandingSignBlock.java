@@ -36,7 +36,7 @@ import top.mcmtr.packet.MSDPacketOpenCustomScreen;
 public abstract class AbstractStandingSignBlock extends Block implements EntityBlock {
 
 	public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-	public static final IntegerProperty TYPE = IntegerProperty.create("type", 0, 1);
+	public static final IntegerProperty TYPE = IntegerProperty.create("type", 0, 5);
 
 	private final Supplier<BlockEntityType<StandingSignBlockEntity>> blockEntityType;
 	private final int maxMessages;
@@ -58,7 +58,7 @@ public abstract class AbstractStandingSignBlock extends Block implements EntityB
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(TYPE, 0);
+		return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getCounterClockWise()).setValue(TYPE, 0);
 	}
 
 	@Override

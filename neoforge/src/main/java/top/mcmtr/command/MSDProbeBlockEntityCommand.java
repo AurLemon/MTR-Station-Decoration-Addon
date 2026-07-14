@@ -68,7 +68,11 @@ public final class MSDProbeBlockEntityCommand {
 
 		final LongAVLTreeSet selectedIds = parseSelectedIds(selectedIdsCsv);
 		final String[] signIds = parseSignIds(signIdsCsv, signBlockEntity.getSignIds().length);
-		signBlockEntity.setData(selectedIds, signIds);
+		final LongAVLTreeSet[] selectedIdsBySlot = new LongAVLTreeSet[signIds.length];
+		for (int i = 0; i < selectedIdsBySlot.length; i++) {
+			selectedIdsBySlot[i] = new LongAVLTreeSet(selectedIds);
+		}
+		signBlockEntity.setData(selectedIdsBySlot, signIds);
 		source.sendSuccess(() -> Component.literal("MSD yamanote sign updated"), true);
 		return 1;
 	}

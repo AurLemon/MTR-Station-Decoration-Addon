@@ -10,6 +10,8 @@ import net.minecraft.network.chat.Component;
 import org.mtr.registry.RegistryClient;
 import top.mcmtr.block.AbstractStandingSignBlock;
 import top.mcmtr.packet.MSDPacketUpdateCustomText;
+import top.mcmtr.render.RenderCalibrationFeature;
+import top.mcmtr.render.RenderCalibrationKey;
 
 public class CustomTextScreen extends Screen {
 
@@ -17,6 +19,7 @@ public class CustomTextScreen extends Screen {
 
 	private final BlockPos blockPos;
 	private final Screen previousScreen;
+	private final String calibrationKey;
 	private final String[] messages;
 	private final EditBox[] textFieldMessages;
 
@@ -27,6 +30,7 @@ public class CustomTextScreen extends Screen {
 		super(Component.translatable("gui.msd.custom_text"));
 		this.blockPos = blockPos;
 		this.previousScreen = Minecraft.getInstance().screen;
+		this.calibrationKey = RenderCalibrationKey.fromBlockState(blockEntity.getBlockState());
 		this.messages = new String[maxArrivals];
 		this.textFieldMessages = new EditBox[maxArrivals];
 		for (int i = 0; i < maxArrivals; i++) {
@@ -58,6 +62,11 @@ public class CustomTextScreen extends Screen {
 		addRenderableWidget(Button.builder(Component.translatable("gui.cancel"), button -> onClose())
 				.bounds(startX + (panelWidth - 10) / 2 + 10, y + 18, (panelWidth - 10) / 2, 20)
 				.build());
+		if (RenderCalibrationFeature.isEnabled()) {
+			addRenderableWidget(Button.builder(Component.literal("Render Calibration"), button -> Minecraft.getInstance().setScreen(new StandingSignRenderCalibrationScreen(calibrationKey, this)))
+					.bounds(startX, y + 44, panelWidth, 20)
+					.build());
+		}
 	}
 
 	@Override

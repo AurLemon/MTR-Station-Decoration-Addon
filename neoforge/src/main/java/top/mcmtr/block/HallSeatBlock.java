@@ -13,7 +13,7 @@ import org.mtr.block.IBlock;
 
 public class HallSeatBlock extends AbstractChangeModelBlock {
 
-	public static final IntegerProperty TYPE = IntegerProperty.create("type", 0, 2);
+	public static final IntegerProperty TYPE = IntegerProperty.create("type", 0, 5);
 
 	public HallSeatBlock(BlockBehaviour.Properties properties) {
 		super(properties);

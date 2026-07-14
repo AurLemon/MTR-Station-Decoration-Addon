@@ -25,9 +25,16 @@ public class RenderCatenaryModel extends BlockEntityRendererExtension<BlockCaten
 			int packedLight,
 			int packedOverlay) {
 		final Direction facing = IBlock.getStatePropertySafe(blockEntity.getBlockState(), BlockCatenaryWithModel.FACING);
-		final StoredMatrixTransformations storedMatrixTransformations = new StoredMatrixTransformations();
+		// Anchor the model in world space so camera movement does not drag it around.
+		final double x = 0.5 + blockEntity.getBlockPos().getX();
+		final double y = blockEntity.getBlockPos().getY();
+		final double z = 0.5 + blockEntity.getBlockPos().getZ();
+		final StoredMatrixTransformations storedMatrixTransformations = new StoredMatrixTransformations(
+				x,
+				y,
+				z);
 		storedMatrixTransformations.add(graphicsHolder -> {
-			graphicsHolder.translate(blockEntity.getOffsetX(), blockEntity.getOffsetY() - 0.5D, blockEntity.getOffsetZ());
+			graphicsHolder.translate(blockEntity.getOffsetX(), blockEntity.getOffsetY(), blockEntity.getOffsetZ());
 			graphicsHolder.mulPose(Axis.YP.rotationDegrees(180 - facing.toYRot()));
 			graphicsHolder.mulPose(Axis.XP.rotationDegrees((float) blockEntity.getRotationX() + 180));
 			graphicsHolder.mulPose(Axis.YP.rotationDegrees((float) blockEntity.getRotationY()));

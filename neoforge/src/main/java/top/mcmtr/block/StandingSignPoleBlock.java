@@ -12,7 +12,7 @@ import org.mtr.block.IBlock;
 
 public class StandingSignPoleBlock extends AbstractChangeModelBlock {
 
-	public static final IntegerProperty TYPE = IntegerProperty.create("type", 0, 1);
+	public static final IntegerProperty TYPE = IntegerProperty.create("type", 0, 5);
 
 	public StandingSignPoleBlock(BlockBehaviour.Properties properties) {
 		super(properties);

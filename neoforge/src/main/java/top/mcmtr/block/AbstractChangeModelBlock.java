@@ -28,7 +28,7 @@ public abstract class AbstractChangeModelBlock extends Block {
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return defaultState(defaultBlockState()).setValue(FACING, context.getHorizontalDirection().getOpposite());
+		return defaultState(defaultBlockState()).setValue(FACING, context.getHorizontalDirection());
 	}
 
 	@Override

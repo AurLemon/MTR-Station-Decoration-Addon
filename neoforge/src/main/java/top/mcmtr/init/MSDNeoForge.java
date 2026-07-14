@@ -17,9 +17,8 @@ import top.mcmtr.packet.MSDPacketOpenCustomScreen;
 import top.mcmtr.packet.MSDPacketOpenRigidCatenaryShapeScreen;
 import top.mcmtr.packet.MSDPacketUpdateCatenaryNode;
 import top.mcmtr.packet.MSDPacketUpdateCustomText;
-import top.mcmtr.packet.MSDPacketUpdateRigidCatenary;
 import top.mcmtr.packet.MSDPacketUpdateModel;
-import top.mcmtr.packet.MSDPacketUpdateYamanoteRailwaySignConfig;
+import top.mcmtr.packet.MSDPacketUpdateRigidCatenary;
 import top.mcmtr.registry.MSDBlockEntities;
 import top.mcmtr.registry.MSDBlocks;
 import top.mcmtr.registry.MSDCreativeTabs;
@@ -50,7 +49,6 @@ public class MSDNeoForge {
 		RegistryServer.registerPacket(MSDPacketUpdateCustomText.class, MSDPacketUpdateCustomText::new);
 		RegistryServer.registerPacket(MSDPacketUpdateRigidCatenary.class, MSDPacketUpdateRigidCatenary::new);
 		RegistryServer.registerPacket(MSDPacketUpdateModel.class, MSDPacketUpdateModel::new);
-		RegistryServer.registerPacket(MSDPacketUpdateYamanoteRailwaySignConfig.class, MSDPacketUpdateYamanoteRailwaySignConfig::new);
 		LOGGER.info("MTR Station Decoration Addon NeoForge blocks registered");
 	}
 }

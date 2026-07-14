@@ -61,7 +61,7 @@ public class BlockCatenaryWithModel extends Block implements EntityBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		return defaultBlockState()
-				.setValue(FACING, context.getHorizontalDirection().getOpposite())
+				.setValue(FACING, context.getHorizontalDirection())
 				.setValue(IS_CONNECTED, false);
 	}
 
